@@ -210,6 +210,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         vboxMenu.setAlignment(Pos.CENTER);
         Button boutonProfil = new Button("Profil");
         setButtonStyle(boutonProfil, "RectRond");
+
+        Supplier<String[]> profileSupplier = () -> new String[] {""};
+        boutonVelo.setOnAction(control.generateEventHandlerAction("show-page-profil", profileSupplier));
+
         Button boutonHistorique = new Button("Mon historique");
         setButtonStyle(boutonHistorique, "RectRond");
         Button boutonCommentaires = new Button("Commentaires");
@@ -468,6 +472,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         //titre profil
         Label titreProfil = new Label("Mon profil");
         titreProfil.setStyle("-fx-font-size: 50;");
+
+        //vbox pour velo actuel
+        VBox veloActuel = new VBox();
+        //Image img = new Image(null);
 
         vboxTitre.getChildren().addAll(titreProfil);
         actualParent.getChildren().addAll(vboxTitre);

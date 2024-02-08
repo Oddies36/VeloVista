@@ -2,6 +2,7 @@ package be.velovista.Model.BL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 public class Location {
     
@@ -10,6 +11,7 @@ public class Location {
     private int idLocation;
     private User user;
     private Velo velo;
+    private ArrayList<Accessoire> accessoires;
     private LocalDate dateDebut;
     private LocalDate dateFin;
 
@@ -31,6 +33,12 @@ public class Location {
     public void setVelo(Velo velo) {
         this.velo = velo;
     }
+    public ArrayList<Accessoire> getAccessoires(){
+        return accessoires;
+    }
+    public void setAccessoires(ArrayList<Accessoire> accessoires){
+        this.accessoires = accessoires;
+    }
     public LocalDate getDateDebut() {
         return dateDebut;
     }
@@ -44,10 +52,11 @@ public class Location {
         this.dateFin = dateFin;
     }
 
-    public Location(int idLocation, User user, Velo velo, String dateDebut, String dateFin){
+    public Location(int idLocation, User user, Velo velo, ArrayList<Accessoire> accessoires, String dateDebut, String dateFin){
         this.idLocation = idLocation;
         this.user = user;
         this.velo = velo;
+        this.accessoires = accessoires;
 
         try{
             this.dateDebut = LocalDate.parse(dateDebut, formatDate);

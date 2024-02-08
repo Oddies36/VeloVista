@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import be.velovista.Model.BL.ClasseConteneur;
 import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.DAL.DAO.Abonnement.AbonnementDAO;
 import be.velovista.Model.DAL.DAO.Abonnement.IAbonnementDAO;
+import be.velovista.Model.DAL.DAO.Location.ILocationDAO;
+import be.velovista.Model.DAL.DAO.Location.LocationDAO;
 import be.velovista.Model.DAL.DAO.User.IUserDAO;
 import be.velovista.Model.DAL.DAO.User.UserDAO;
 import be.velovista.Model.DAL.DAO.Velo.IVeloDAO;
@@ -22,6 +25,7 @@ public class PrimaryModel implements IModel {
       private IUserDAO iuserdao = new UserDAO();
       private IVeloDAO ivelodao = new VeloDAO();
       private IAbonnementDAO iabonnementdao = new AbonnementDAO();
+      private ILocationDAO ilocationdao = new LocationDAO();
       private UserConnected userConnected = new UserConnected();
       Alert alert;
 
@@ -37,6 +41,18 @@ public class PrimaryModel implements IModel {
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
+    }
+
+    //Profile methods
+
+    public void getInfoProfilePage(){
+        ClasseConteneur classcon = new ClasseConteneur(null, this.userConnected);
+
+        this.ilocationdao.getLocation(this.userConnected.getUser().geteMail());
+
+        support.firePropertyChange("retour-info-profile", "", classcon);
+
+
     }
 
     //User methods
