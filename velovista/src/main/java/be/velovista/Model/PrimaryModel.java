@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.ClasseConteneur;
+import be.velovista.Model.BL.Location;
 import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.DAL.DAO.Abonnement.AbonnementDAO;
@@ -255,9 +257,9 @@ public class PrimaryModel implements IModel {
         }
     }
 
-    public void getVeloChoixUtilisateur(int id){
+    public Velo getVeloChoixUtilisateur(int id){
         Velo v = ivelodao.getVelo(id);
-        this.support.firePropertyChange("resultat-choix-velo-utilisateur", "", v);
+        return v;
     }
 
 

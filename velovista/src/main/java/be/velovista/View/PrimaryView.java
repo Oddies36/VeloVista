@@ -74,7 +74,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         //Velo v = new VeloClassique(10, 1, "zebi", "Classique", true, "blanc", 54, 2022, 500.00, "https://www.statebicycle.com/cdn/shop/products/6061-eBikeCommuter-MatteBlack_1.jpg?v=1684443969");
         //ArrayList<String> test = new ArrayList<>();
         // Préparation de la première fenêtre
-        showProfilePage();
+        showLoginScreen();
         stage.show();
     }
 
@@ -202,8 +202,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setButtonStyle(boutonVelo, "Rect");
 
         //event sur bouton "nos velos"
-        Supplier<String[]> supplier = () -> new String[] {""};
-        boutonVelo.setOnAction(control.generateEventHandlerAction("show-velo-page", supplier));
+        Supplier<String[]> boutonVeloSupplier = () -> new String[] {""};
+        boutonVelo.setOnAction(control.generateEventHandlerAction("show-velo-page", boutonVeloSupplier));
 
         //vbox menu et items dans le menu
         VBox vboxMenu = new VBox();
@@ -212,7 +212,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setButtonStyle(boutonProfil, "RectRond");
 
         Supplier<String[]> profileSupplier = () -> new String[] {""};
-        boutonVelo.setOnAction(control.generateEventHandlerAction("show-page-profil", profileSupplier));
+        boutonProfil.setOnAction(control.generateEventHandlerAction("show-page-profil", profileSupplier));
 
         Button boutonHistorique = new Button("Mon historique");
         setButtonStyle(boutonHistorique, "RectRond");

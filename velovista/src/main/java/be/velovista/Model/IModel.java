@@ -2,6 +2,7 @@ package be.velovista.Model;
 
 import java.beans.PropertyChangeListener;
 
+import be.velovista.Model.BL.Velo;
 import javafx.scene.control.Alert.AlertType;
 
 public interface IModel {
@@ -18,7 +19,7 @@ public interface IModel {
     public boolean writeNewPassword(String Email, String mdp, String repeatMdp);
     public int checkEmailExiste(String Email);
     public void showAlert(AlertType alertType, String title, String context);
-    public void getVeloChoixUtilisateur(int id);
+    public Velo getVeloChoixUtilisateur(int id);
     public void louerVelo(int id);
     public void getListeAbo();
     //public void getInfoProfilePage();
