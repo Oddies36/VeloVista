@@ -18,7 +18,7 @@ public class LocationDAO implements ILocationDAO {
   }
 
   public void createLocationTable(){
-    String sqlString = "CREATE TABLE IF NOT EXISTS LocationVelo (id_location_velo SERIAL, id_abonnement int, id_accessoire int, prixtotal DECIMAL(10,2), DateDebut DATE, DateFin DATE, PRIMARY KEY (id_location_velo),FOREIGN KEY (id_abonnement) REFERENCES abonnement(idabonnement), FOREIGN KEY (id_accessoire) REFERENCES accessoires(idaccessoire))";
+    String sqlString = "CREATE TABLE IF NOT EXISTS LocationVelo (id_location_velo SERIAL, id_abonnement int, id_accessoire int, prixtotal DECIMAL(10,2), DateDebut DATE, DateFin DATE, PRIMARY KEY (id_location_velo),FOREIGN KEY (id_abonnement) REFERENCES abonnement(idabonnement), FOREIGN KEY (id_accessoire) REFERENCES accessoire(idaccessoire))";
 
     try(Statement stat = DBConnection.conn.createStatement()){
       stat.executeQuery(sqlString);

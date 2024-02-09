@@ -13,6 +13,8 @@ import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.DAL.DAO.Abonnement.AbonnementDAO;
 import be.velovista.Model.DAL.DAO.Abonnement.IAbonnementDAO;
+import be.velovista.Model.DAL.DAO.Accessoire.AccessoireDAO;
+import be.velovista.Model.DAL.DAO.Accessoire.IAccessoireDAO;
 import be.velovista.Model.DAL.DAO.Location.ILocationDAO;
 import be.velovista.Model.DAL.DAO.Location.LocationDAO;
 import be.velovista.Model.DAL.DAO.User.IUserDAO;
@@ -28,6 +30,7 @@ public class PrimaryModel implements IModel {
       private IVeloDAO ivelodao = new VeloDAO();
       private IAbonnementDAO iabonnementdao = new AbonnementDAO();
       private ILocationDAO ilocationdao = new LocationDAO();
+      private IAccessoireDAO iaccessoiredao = new AccessoireDAO();
       private UserConnected userConnected = new UserConnected();
       Alert alert;
 
@@ -210,9 +213,6 @@ public class PrimaryModel implements IModel {
 
     //Methodes Velos
 
-    public void louerVelo(int id){
-        System.out.println(this.userConnected.getUser().getNom());
-    }
 
     public void getPrixVelos(){
         ArrayList<String> listePrixTypeVelos = new ArrayList<>();
@@ -259,6 +259,7 @@ public class PrimaryModel implements IModel {
 
     public Velo getVeloChoixUtilisateur(int id){
         Velo v = ivelodao.getVelo(id);
+        this.support.firePropertyChange("resultat-choix-velo-utilisateur", "", v);
         return v;
     }
 
@@ -276,5 +277,11 @@ public class PrimaryModel implements IModel {
 
     public void getListeAbo(){
         support.firePropertyChange("resultat-nom-liste-abonnements", "", this.iabonnementdao.getAbonnements());
+    }
+
+    //Methodes accessoires
+
+    public ArrayList<Accessoire> getAccessoires(){
+        return iaccessoiredao.getAccessoires();
     }
 }

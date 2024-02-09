@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import be.velovista.Controller.Controller;
+import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.BL.VeloClassique;
 import be.velovista.Model.BL.VeloElectrique;
@@ -17,6 +18,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -759,6 +761,43 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         actualParent.getChildren().addAll(bp);
         
+        stage.setResizable(false);
+        scene = new Scene(actualParent, 1200, 700);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
+
+    public void showChoixAccessoires(int idVeloChoisi, ArrayList<Accessoire> listeAccessoires){
+        //parent
+        actualParent = new VBox();
+        actualParent.setStyle("-fx-background-color: #ffffff");
+
+        BorderPane bp = new BorderPane();
+        GridPane gp = new GridPane();
+        gp.setAlignment(Pos.CENTER);
+        bp.setCenter(gp);
+
+        //titre
+        Label titre = new Label("Nos accessoires");
+        titre.setStyle("-fx-font-size: 50;");
+
+        HBox hboxChkBoxes = new HBox();
+        hboxChkBoxes.setAlignment(Pos.CENTER);
+        // CheckBox chkboxCasque = new CheckBox("Casque");
+        // CheckBox chkboxCadenas = new CheckBox("Cadenas");
+        // CheckBox chkboxGillet = new CheckBox("Gillet");
+
+        for(Accessoire acc : listeAccessoires){
+            CheckBox chkbox = new CheckBox(acc.getNomAccessoire());
+            Label lab = new Label(String.valueOf(acc.getPrixAccessoire()));
+
+            hboxChkBoxes.getChildren().addAll(chkbox, lab);
+        }
+
+        BorderPane.setAlignment(titre, Pos.CENTER);
+        bp.setTop(titre);
+        bp.setBottom(hboxChkBoxes);
+        actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 1200, 700);
         stage.setScene(scene);

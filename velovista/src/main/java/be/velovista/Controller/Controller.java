@@ -108,7 +108,7 @@ public class Controller {
     }
 
     public void louerVelo(String id){
-        this.model.louerVelo(Integer.parseInt(id));
+        this.view.showChoixAccessoires(Integer.parseInt(id), this.model.getAccessoires());
     }
 
     public void getVeloChoixUtilisateur(String idVelo){
