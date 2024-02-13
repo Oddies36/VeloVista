@@ -19,5 +19,5 @@ public interface IView {
   public void showMdpResetAvecMail(String Email);
   public void showListeAboDispo(ArrayList<String> listeAbo);
   public void showChoixVeloUtilisateur(Velo v);
-  public void showChoixAccessoires(int idVeloChoisi, ArrayList<Accessoire> listeAccessoires);
+  public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires);
 }

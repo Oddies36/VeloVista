@@ -767,7 +767,12 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showChoixAccessoires(int idVeloChoisi, ArrayList<Accessoire> listeAccessoires){
+    public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires){
+        ArrayList<String> choixAccessoiresId = new ArrayList<>();
+        //ArrayList<String> idVelo = new ArrayList<>();
+
+        //String[] idVelo = new String[];
+        //idVelo.add(Integer.toString(v.getIdVelo()));
         //parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
@@ -777,26 +782,87 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //titre
+
+
+        //top
+        HBox hboxTitreRetour = new HBox();
+        hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
+
+        Button but =  new Button("<-");
+        setButtonStyle(but, "retour");
+        Supplier<String[]> backSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
+        but.setOnAction(control.generateEventHandlerAction("choix-velo-utilisateur", backSupplier));
+
+        hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
+
+        HBox hboxTitre = new HBox();
+        HBox.setHgrow(hboxTitre, Priority.ALWAYS);
+        hboxTitre.setAlignment(Pos.CENTER);
+
         Label titre = new Label("Nos accessoires");
         titre.setStyle("-fx-font-size: 50;");
+        
+        hboxTitre.getChildren().addAll(titre);
+        hboxTitreRetour.getChildren().addAll(but, hboxTitre);
 
-        HBox hboxChkBoxes = new HBox();
-        hboxChkBoxes.setAlignment(Pos.CENTER);
-        // CheckBox chkboxCasque = new CheckBox("Casque");
-        // CheckBox chkboxCadenas = new CheckBox("Cadenas");
-        // CheckBox chkboxGillet = new CheckBox("Gillet");
 
-        for(Accessoire acc : listeAccessoires){
+
+
+
+
+
+
+        //Center
+        //HBox hboxChkBoxes = new HBox();
+        //hboxChkBoxes.setAlignment(Pos.CENTER);
+
+        int columnIndex = 0;
+        int rowIndex = 0;
+
+        for (Accessoire acc : listeAccessoires) {
+            VBox vboxAccessoire = new VBox();
+            vboxAccessoire.setAlignment(Pos.CENTER);
             CheckBox chkbox = new CheckBox(acc.getNomAccessoire());
-            Label lab = new Label(String.valueOf(acc.getPrixAccessoire()));
 
-            hboxChkBoxes.getChildren().addAll(chkbox, lab);
+            chkbox.selectedProperty().addListener((obs, checkBoxInactif, checkBoxActif) -> {
+                if(checkBoxActif){
+                    choixAccessoiresId.add(Integer.toString(acc.getIdAccessoires()));
+                }
+                else{
+                    choixAccessoiresId.remove(Integer.toString(acc.getIdAccessoires()));
+                }
+            });
+
+            Label labPrix = new Label(String.valueOf("Prix: " + acc.getPrixAccessoire()) + "€");
+            Image img = new Image(acc.getPhotoAccessoire(), true);
+            ImageView imgview = new ImageView(img);
+            Label descLab = new Label(acc.getDescriptionAccessoire());
+            descLab.setAlignment(Pos.CENTER);
+            descLab.setMaxWidth(200);
+            descLab.setWrapText(true);
+            imgview.setFitWidth(100);
+            imgview.setPreserveRatio(true);
+
+            VBox.setMargin(chkbox, new Insets(0, 60, 0, 0));
+    
+            vboxAccessoire.getChildren().addAll(imgview, descLab, labPrix, chkbox);
+    
+            gp.add(vboxAccessoire, columnIndex, rowIndex);
+            columnIndex++;
+            if (columnIndex > 1) {
+                columnIndex = 0;
+                rowIndex++;
+            }
         }
 
-        BorderPane.setAlignment(titre, Pos.CENTER);
-        bp.setTop(titre);
-        bp.setBottom(hboxChkBoxes);
+        //Bottom
+        Button butSelection = new Button("Sélectionner");
+        //Supplier<String[]> choixAccessoireSupplier = () -> new String[] {Integer.toString(v.getIdVelo()), choixAccessoiresId};
+       // but.setOnAction(control.generateEventHandlerAction("choix-velo-utilisateur", choixAccessoireSupplier));
+        
+        bp.setBottom(butSelection);
+        bp.setTop(hboxTitreRetour);
+        bp.setCenter(gp);
         actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 1200, 700);

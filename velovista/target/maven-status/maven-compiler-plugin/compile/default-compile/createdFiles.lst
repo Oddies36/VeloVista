@@ -19,7 +19,6 @@ be\velovista\Model\DAL\DAO\Location\LocationDAO.class
 be\velovista\Model\BL\Abonnement.class
 be\velovista\Model\IModel.class
 be\velovista\Model\BL\ClasseConteneur.class
-be\velovista\Model\BL\Accessoire$NomAccessoires.class
 be\velovista\Model\DAL\DAO\Velo\IVeloDAO.class
 be\velovista\Model\DAL\DAO\Accessoire_Location\IAccessoire_LocationDAO.class
 be\velovista\Model\PrimaryModel.class
