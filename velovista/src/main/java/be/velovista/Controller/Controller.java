@@ -186,12 +186,7 @@ public class Controller {
     }
 
 
-    public void testMethod(String idVelo, ArrayList<String> choixAccessoires){
-        System.out.println(idVelo);
-        for(String acc : choixAccessoires){
-            System.out.println(acc);
-        }
-        this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)));
-
+    public void showChoixAbonnements(String idVelo, ArrayList<String> choixAccessoires){
+        this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)), choixAccessoires);
     }
 }
