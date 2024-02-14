@@ -2,6 +2,7 @@ package be.velovista.Controller;
 
 import java.beans.PropertyChangeListener;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -87,6 +88,9 @@ public class Controller {
             case "show-page-profil":
                 t = (x) -> this.getInfoProfilePage();
             break;
+            case "retour-main-page":
+                t = (x) -> this.showMainPage();
+            break;
             default:
                 throw new InvalidParameterException(action + " n'existe pas.");
         }
@@ -103,6 +107,9 @@ public class Controller {
         };
     }
 
+    public void showMainPage(){
+        this.view.showMainScreen();
+    }
     public void getInfoProfilePage(){
         //this.model.getInfoProfilePage();
     }
@@ -176,5 +183,15 @@ public class Controller {
 
     public void stop(){       
         this.view.stopApp();
+    }
+
+
+    public void testMethod(String idVelo, ArrayList<String> choixAccessoires){
+        System.out.println(idVelo);
+        for(String acc : choixAccessoires){
+            System.out.println(acc);
+        }
+        this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)));
+
     }
 }

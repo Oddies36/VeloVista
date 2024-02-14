@@ -20,4 +20,5 @@ public interface IView {
   public void showListeAboDispo(ArrayList<String> listeAbo);
   public void showChoixVeloUtilisateur(Velo v);
   public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires);
+  public void showChoixAbonnements(Velo v , ArrayList<String> choixAccessoires);
 }
