@@ -24,5 +24,6 @@ public interface IModel {
     public Velo getVeloChoixUtilisateur(int id);
     public void getListeAbo();
     public ArrayList<Accessoire> getAccessoires();
+    public ArrayList<String> getListeChoixAbo();
     //public void getInfoProfilePage();
 }

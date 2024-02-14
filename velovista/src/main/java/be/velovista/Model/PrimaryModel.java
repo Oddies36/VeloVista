@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.ClasseConteneur;
-import be.velovista.Model.BL.Location;
 import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.DAL.DAO.Abonnement.AbonnementDAO;
@@ -277,6 +276,10 @@ public class PrimaryModel implements IModel {
 
     public void getListeAbo(){
         support.firePropertyChange("resultat-nom-liste-abonnements", "", this.iabonnementdao.getAbonnements());
+    }
+
+    public ArrayList<String> getListeChoixAbo(){
+        return this.iabonnementdao.getAbonnements();
     }
 
     //Methodes accessoires

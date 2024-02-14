@@ -187,6 +187,6 @@ public class Controller {
 
 
     public void showChoixAbonnements(String idVelo, ArrayList<String> choixAccessoires){
-        this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)), choixAccessoires);
+        this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)), choixAccessoires, this.model.getListeChoixAbo());
     }
 }

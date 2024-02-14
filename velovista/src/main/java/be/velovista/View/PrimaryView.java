@@ -3,6 +3,7 @@ package be.velovista.View;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
@@ -19,11 +20,14 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -859,7 +863,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires){
+    public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<String> listeAbo){
         //parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
@@ -887,10 +891,23 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Nos abonnements");
         titre.setStyle("-fx-font-size: 50;");
         
+        //center
+        ToggleGroup tog = new ToggleGroup();
+        VBox vboxRadioBut = new VBox();
+        for (String abo : listeAbo){
+            RadioButton radioBut = new RadioButton(abo);
+            radioBut.setToggleGroup(tog);
+            vboxRadioBut.getChildren().add(radioBut);
+
+        }
+        LocalDate dateNow = LocalDate.now();
+        DatePicker datepick = new DatePicker();
+
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
-
+        bp.setCenter(vboxRadioBut);
         bp.setTop(hboxTitreRetour);
+        bp.setBottom(datepick);
         actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 1200, 700);

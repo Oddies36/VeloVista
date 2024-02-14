@@ -1,6 +1,5 @@
 package be.velovista.Model.DAL.DAO.AbonnementUtilisateur;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -22,4 +21,5 @@ public class AbonnementUtilisateurDAO implements IAbonnementUtilisateurDAO {
             System.out.println(e.getMessage());
         }
     }
+
 }

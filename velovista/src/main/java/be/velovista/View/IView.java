@@ -3,6 +3,7 @@ package be.velovista.View;
 import java.util.ArrayList;
 
 import be.velovista.Controller.Controller;
+import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.Velo;
 
@@ -20,5 +21,5 @@ public interface IView {
   public void showListeAboDispo(ArrayList<String> listeAbo);
   public void showChoixVeloUtilisateur(Velo v);
   public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires);
-  public void showChoixAbonnements(Velo v , ArrayList<String> choixAccessoires);
+  public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<String> listeAbo);
 }

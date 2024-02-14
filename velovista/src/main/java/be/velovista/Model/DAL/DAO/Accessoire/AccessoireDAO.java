@@ -2,7 +2,6 @@ package be.velovista.Model.DAL.DAO.Accessoire;
 
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
