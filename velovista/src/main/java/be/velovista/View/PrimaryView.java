@@ -914,11 +914,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         HBox hboxBottom = new HBox();
         DatePicker datepick = new DatePicker(LocalDate.now());
         Button validerBut = new Button("Valider");
-        validerBut.setOnAction(e -> {
+        validerBut.setOnAction(event -> {
             RadioButton choixAboUser = (RadioButton) tog.getSelectedToggle();
             if(choixAboUser != null){
                 String choixAboUserString = choixAboUser.getText();
-                control.testMethod(datepick.getValue(), choixAboUserString);
+                control.testMethod(v, listeAccessoires, datepick.getValue(), choixAboUserString);
             }
             else{
                 control.showAlert(AlertType.WARNING, "Abonnement", "Vous devez choisir un abonnement");
