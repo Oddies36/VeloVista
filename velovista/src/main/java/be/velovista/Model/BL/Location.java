@@ -14,6 +14,7 @@ public class Location {
     private ArrayList<Accessoire> accessoires;
     private LocalDate dateDebut;
     private LocalDate dateFin;
+    private double prixTotal;
 
     public int getIdLocation() {
         return idLocation;
@@ -51,12 +52,19 @@ public class Location {
     public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
+    public double getPrixTotal(){
+        return this.prixTotal;
+    }
+    public void setPrixTotal(double prixTotal){
+        this.prixTotal = prixTotal;
+    }
 
-    public Location(int idLocation, User user, Velo velo, ArrayList<Accessoire> accessoires, String dateDebut, String dateFin){
+    public Location(int idLocation, User user, Velo velo, ArrayList<Accessoire> accessoires, String dateDebut, String dateFin, double prixTotal){
         this.idLocation = idLocation;
         this.user = user;
         this.velo = velo;
         this.accessoires = accessoires;
+        this.prixTotal = prixTotal;
 
         try{
             this.dateDebut = LocalDate.parse(dateDebut, formatDate);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.ClasseConteneur;
 import be.velovista.Model.BL.UserConnected;
@@ -52,7 +53,7 @@ public class PrimaryModel implements IModel {
     public void getInfoProfilePage(){
         ClasseConteneur classcon = new ClasseConteneur(null, this.userConnected);
 
-        this.ilocationdao.getLocation(this.userConnected.getUser().geteMail());
+        this.ilocationdao.getLocationByEmail(this.userConnected.getUser().geteMail());
 
         support.firePropertyChange("retour-info-profile", "", classcon);
 
@@ -275,11 +276,11 @@ public class PrimaryModel implements IModel {
     //Methodes abonnements
 
     public void getListeAbo(){
-        support.firePropertyChange("resultat-nom-liste-abonnements", "", this.iabonnementdao.getAbonnements());
+        support.firePropertyChange("resultat-nom-liste-abonnements", "", this.iabonnementdao.getListeAbonnements());
     }
 
-    public ArrayList<String> getListeChoixAbo(){
-        return this.iabonnementdao.getAbonnements();
+    public ArrayList<Abonnement> getListeChoixAbo(){
+        return this.iabonnementdao.getListeAbonnements();
     }
 
     //Methodes accessoires

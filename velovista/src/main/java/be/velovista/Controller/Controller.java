@@ -2,6 +2,7 @@ package be.velovista.Controller;
 
 import java.beans.PropertyChangeListener;
 import java.security.InvalidParameterException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -188,5 +189,21 @@ public class Controller {
 
     public void showChoixAbonnements(String idVelo, ArrayList<String> choixAccessoires){
         this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)), choixAccessoires, this.model.getListeChoixAbo());
+    }
+
+    public void testMethod(LocalDate date, String abo){
+
+        if (date.isBefore(LocalDate.now())){
+            System.out.println("not ok");
+        }
+        else{
+            System.out.println("ok");
+            System.out.println(date);
+            System.out.println(abo);
+        }
+    }
+
+    public void showAlert(AlertType alertType, String titre, String contenu){
+        this.model.showAlert(alertType, titre, contenu);
     }
 }

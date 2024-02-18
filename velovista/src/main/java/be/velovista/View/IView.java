@@ -18,8 +18,8 @@ public interface IView {
   public void showListeVeloClassique(ArrayList<Velo> listeVelosClass);
   public void showMdpOublie();
   public void showMdpResetAvecMail(String Email);
-  public void showListeAboDispo(ArrayList<String> listeAbo);
+  public void showListeAboDispo(ArrayList<Abonnement> listeAbo);
   public void showChoixVeloUtilisateur(Velo v);
   public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires);
-  public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<String> listeAbo);
+  public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo);
 }

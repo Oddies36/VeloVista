@@ -8,16 +8,20 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import be.velovista.Controller.Controller;
+import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.BL.VeloClassique;
 import be.velovista.Model.BL.VeloElectrique;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
@@ -28,6 +32,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -37,6 +42,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class PrimaryView extends Application implements IView, PropertyChangeListener {
@@ -68,7 +75,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
                 break;
             case "resultat-nom-liste-abonnements":
                 if(evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
-                    this.showListeAboDispo((ArrayList<String>) evt.getNewValue());
+                    this.showListeAboDispo((ArrayList<Abonnement>) evt.getNewValue());
         }
     }
 
@@ -641,7 +648,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showListeAboDispo(ArrayList<String> listeAbo){
+    public void showListeAboDispo(ArrayList<Abonnement> listeAbo){
 
         Button back = new Button("Retour");
         BorderPane bp = new BorderPane();
@@ -659,8 +666,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         //Center
         HBox hboxListeAbo = new HBox();
-        for(String nomAbo : listeAbo){
-            Label l = new Label(nomAbo);
+        for(Abonnement nomAbo : listeAbo){
+            Label l = new Label(nomAbo.getNomAbonnement());
             hboxListeAbo.getChildren().add(l);
         }
         // VBox vboxJournalier = new VBox();
@@ -700,7 +707,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("<-");
+        FontAwesomeIconView backButtonIcon = new FontAwesomeIconView(FontAwesomeIcon.ARROW_LEFT);
+        backButtonIcon.setFill(Color.WHITE);
+        Button but =  new Button();
+        but.setGraphic(backButtonIcon);
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {v.getType()};
         but.setOnAction(control.generateEventHandlerAction("show-liste-velo-class", backSupplier));
@@ -792,7 +802,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("<-");
+        Button but =  new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
         but.setOnAction(control.generateEventHandlerAction("choix-velo-utilisateur", backSupplier));
@@ -863,7 +873,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<String> listeAbo){
+    public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo){
         //parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
@@ -877,7 +887,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("<-");
+        Button but =  new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
         but.setOnAction(control.generateEventHandlerAction("louer-velo", backSupplier));
@@ -894,23 +904,73 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         //center
         ToggleGroup tog = new ToggleGroup();
         VBox vboxRadioBut = new VBox();
-        for (String abo : listeAbo){
-            RadioButton radioBut = new RadioButton(abo);
+        for (Abonnement abo : listeAbo){
+            RadioButton radioBut = new RadioButton(abo.getNomAbonnement());
             radioBut.setToggleGroup(tog);
             vboxRadioBut.getChildren().add(radioBut);
-
         }
-        LocalDate dateNow = LocalDate.now();
-        DatePicker datepick = new DatePicker();
+
+        //bottom
+        HBox hboxBottom = new HBox();
+        DatePicker datepick = new DatePicker(LocalDate.now());
+        Button validerBut = new Button("Valider");
+        validerBut.setOnAction(e -> {
+            RadioButton choixAboUser = (RadioButton) tog.getSelectedToggle();
+            if(choixAboUser != null){
+                String choixAboUserString = choixAboUser.getText();
+                control.testMethod(datepick.getValue(), choixAboUserString);
+            }
+            else{
+                control.showAlert(AlertType.WARNING, "Abonnement", "Vous devez choisir un abonnement");
+            }
+        });
 
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
+        hboxBottom.getChildren().addAll(datepick, validerBut);
         bp.setCenter(vboxRadioBut);
         bp.setTop(hboxTitreRetour);
-        bp.setBottom(datepick);
+        bp.setBottom(hboxBottom);
         actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 1200, 700);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
+
+    public void showRecapView(){
+        //parent
+        actualParent = new VBox();
+        actualParent.setStyle("-fx-background-color: #ffffff");
+
+        BorderPane bp = new BorderPane();
+        GridPane gp = new GridPane();
+        gp.setAlignment(Pos.CENTER);
+        bp.setCenter(gp);
+
+        //top
+        HBox hboxTitreRetour = new HBox();
+        hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
+
+        Button but =  new Button("\u2190");
+        setButtonStyle(but, "retour");
+        Supplier<String[]> backSupplier = () -> new String[] {};
+        //but.setOnAction(control.generateEventHandlerAction("louer-velo", backSupplier));
+
+        hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
+
+        HBox hboxTitre = new HBox();
+        HBox.setHgrow(hboxTitre, Priority.ALWAYS);
+        hboxTitre.setAlignment(Pos.CENTER);
+
+        Label titre = new Label("Récapitulatif");
+        titre.setStyle("-fx-font-size: 50;");
+
+        hboxTitreRetour.getChildren().addAll(but, titre);
+        bp.setTop(hboxTitreRetour);
+        actualParent.getChildren().addAll(bp);
+        stage.setResizable(false);
+        scene = new Scene(actualParent, 500, 700);
         stage.setScene(scene);
         stage.centerOnScreen();
     }
@@ -949,14 +1009,14 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             nomBouton.setOnMouseReleased(e -> nomBouton.setStyle("-fx-font-size: 15px; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;"));
             break;
             case "retour":
-            nomBouton.setStyle("-fx-font-size: 15px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;");
+            nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;");
             nomBouton.setPrefWidth(60);
             VBox.setMargin(nomBouton, new Insets(30, 0, 0, 0));
       
-            nomBouton.setOnMouseEntered(e -> nomBouton.setStyle("-fx-font-size: 15px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #46508f; -fx-text-fill: white;"));
-            nomBouton.setOnMouseExited(e -> nomBouton.setStyle("-fx-font-size: 15px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;"));
-            nomBouton.setOnMousePressed(e -> nomBouton.setStyle("-fx-font-size: 15px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #1f2a50; -fx-text-fill: white;"));
-            nomBouton.setOnMouseReleased(e -> nomBouton.setStyle("-fx-font-size: 15px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;"));
+            nomBouton.setOnMouseEntered(e -> nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #46508f; -fx-text-fill: white;"));
+            nomBouton.setOnMouseExited(e -> nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;"));
+            nomBouton.setOnMousePressed(e -> nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #1f2a50; -fx-text-fill: white;"));
+            nomBouton.setOnMouseReleased(e -> nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;"));
         }
     }
 

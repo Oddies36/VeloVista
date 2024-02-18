@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import be.velovista.Model.BL.Location;
 import be.velovista.Model.DAL.DBConnection;
@@ -28,14 +30,14 @@ public class LocationDAO implements ILocationDAO {
     }
   }
 /////////////////
-  public Location getLocation(String email){
-    String sqString = "SELECT id_location_velo FROM LocationVelo";
+  public Location getLocationByEmail(String email){
+    String sqString = "SELECT id_location_velo, id_abonnement, id_accessoire FROM LocationVelo";
     Location l = null;
 
     try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqString)) {
       try(ResultSet rset = pstat.executeQuery()){
         if(rset.next()){
-          l = new Location(0, this.iuserdao.getUser(email), null, null, sqString, sqString);
+          l = new Location(rset.getInt(1), null, null, null, email, sqString, 0);
         }
       }
       catch(SQLException e){
@@ -46,5 +48,31 @@ public class LocationDAO implements ILocationDAO {
       System.out.println(e.getMessage());
     }
     return l;
+  }
+
+  public ArrayList<String> getLocationInfo(String email){
+    ArrayList<String> result = new ArrayList<>();
+    String sqlString = "SELECT locv.id_location_velo, usr.iduser, v.idvelo, locv.datedebut, locv.datefin, locv.prixtotal FROM locationvelo AS locv INNER JOIN abonnementutilisateur AS abou ON locv.id_abonnementutilisateur = abou.id_abonnement_utilisateur INNER JOIN utilisateur AS usr ON usr.iduser = abou.id_utilisateur INNER JOIN velo AS v ON v.idvelo = abou.id_velo WHERE usr.email = ?";
+
+    try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+      pstat.setString(1, email);
+      try(ResultSet rset = pstat.executeQuery()){
+        while(rset.next()){
+          result.add(Integer.toString(rset.getInt(1)));
+          result.add(Integer.toString(rset.getInt(2)));
+          result.add(Integer.toString(rset.getInt(3)));
+          result.add(rset.getString(4));
+          result.add(rset.getString(5));
+          result.add(Double.toString(rset.getDouble(6)));
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    return result;
   }
 }

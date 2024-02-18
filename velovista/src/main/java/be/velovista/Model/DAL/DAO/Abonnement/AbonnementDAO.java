@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.DAL.DBConnection;
 
 public class AbonnementDAO implements IAbonnementDAO{
@@ -44,4 +45,27 @@ public class AbonnementDAO implements IAbonnementDAO{
     }
     return listeNomAbo;
   }
+
+  public ArrayList<Abonnement> getListeAbonnements(){
+    String sqlString = "SELECT idabonnement, nomabonnement FROM Abonnement;";
+    ArrayList<Abonnement> listeAbo = new ArrayList<>();
+
+    try(Statement stat = DBConnection.conn.createStatement()){
+      try(ResultSet rset = stat.executeQuery(sqlString)){
+        while(rset.next()){
+          Abonnement a = new Abonnement(rset.getInt(1), rset.getString(2));
+          listeAbo.add(a);
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    return listeAbo;
+  }
+
+  
 }

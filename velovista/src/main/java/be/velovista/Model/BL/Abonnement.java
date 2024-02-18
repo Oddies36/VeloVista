@@ -4,7 +4,6 @@ public class Abonnement {
     
     private int idAbonnement;
     private String nomAbonnement;
-    private double prixAbonnement;
 
     public int getIdAbonnement() {
         return idAbonnement;
@@ -15,16 +14,9 @@ public class Abonnement {
     public String getNomAbonnement() {
         return nomAbonnement;
     }
-    public double getPrixAbonnement(){
-        return prixAbonnement;
-    }
-    public void setPrixAbonnement(double prixAbonnement){
-        this.prixAbonnement = prixAbonnement;
-    }
 
-    public Abonnement(int idAbonnement, String nomAbonnement, double prixAbonnement){
+    public Abonnement(int idAbonnement, String nomAbonnement){
         this.idAbonnement = idAbonnement;
         this.nomAbonnement = nomAbonnement;
-        this.prixAbonnement = prixAbonnement;
     }
 }

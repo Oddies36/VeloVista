@@ -3,6 +3,7 @@ package be.velovista.Model;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
+import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.BL.Accessoire;
 import be.velovista.Model.BL.Velo;
 import javafx.scene.control.Alert.AlertType;
@@ -24,6 +25,6 @@ public interface IModel {
     public Velo getVeloChoixUtilisateur(int id);
     public void getListeAbo();
     public ArrayList<Accessoire> getAccessoires();
-    public ArrayList<String> getListeChoixAbo();
+    public ArrayList<Abonnement> getListeChoixAbo();
     //public void getInfoProfilePage();
 }
