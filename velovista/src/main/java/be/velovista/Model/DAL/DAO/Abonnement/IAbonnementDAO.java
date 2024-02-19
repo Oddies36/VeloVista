@@ -8,4 +8,5 @@ public interface IAbonnementDAO {
   public void createAbonnementTable();
   public ArrayList<String> getAbonnements();
   public ArrayList<Abonnement> getListeAbonnements();
+  public int getAbonnementId(String nomAbo);
 }

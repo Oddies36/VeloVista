@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 import be.velovista.Model.IModel;
 import be.velovista.Model.PrimaryModel;
+import be.velovista.Model.BL.Velo;
 import be.velovista.View.IView;
 import be.velovista.View.PrimaryView;
 import javafx.event.ActionEvent;
@@ -112,7 +113,7 @@ public class Controller {
         this.view.showMainScreen();
     }
     public void getInfoProfilePage(){
-        //this.model.getInfoProfilePage();
+        this.model.getInfoProfilePage();
     }
 
     public void louerVelo(String id){
@@ -191,17 +192,30 @@ public class Controller {
         this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)), choixAccessoires, this.model.getListeChoixAbo());
     }
 
-    public void testMethod(LocalDate date, String abo){
+    public void calculDesPrix(Velo v, ArrayList<String> liseAccessoires, LocalDate date, String abo){
 
         if (date.isBefore(LocalDate.now())){
-            System.out.println("not ok");
+            this.view.showAlert(AlertType.ERROR, "Dates", "La date choisie est dans le passé.");
         }
         else{
-            System.out.println("ok");
-            System.out.println(date);
-            System.out.println(abo);
+            ArrayList<Double> listePrix = this.model.calculPrixTotalLocation(v, abo, liseAccessoires);
+            LocalDate dateFin = this.model.calculDateFin(date, abo);
+            this.view.showRecapView(v, listePrix.get(0), listePrix.get(1), listePrix.get(2), abo, date, dateFin);
         }
     }
+
+
+    public void createAboAndLocation(Velo v, double prixAbo, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin){
+        if(this.model.checkLocationExists(dateDebut, dateFin)){
+            this.view.showAlert(AlertType.ERROR, "Location", "Vous avez déjà une location en cours!");
+        }
+        else{
+            int idAbonnementUtilisateur = this.model.createAbonnement(v, nomAbo, prixAbo);
+            this.model.createLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+        }
+    }
+
+
 
     public void showAlert(AlertType alertType, String titre, String contenu){
         this.model.showAlert(alertType, titre, contenu);

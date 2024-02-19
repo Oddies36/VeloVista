@@ -2,6 +2,7 @@ package be.velovista.Model.DAL.DAO.Accessoire;
 
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -45,5 +46,26 @@ public class AccessoireDAO implements IAccessoireDAO {
             System.out.println(e.getMessage());
         }
         return listeAccessoires;
+    }
+
+    public Accessoire getAccessoireFromId(String idAccessoire){
+        Accessoire a = null;
+        String sqlString = "SELECT idaccessoire, nomaccessoire, prixaccessoire, photoaccessoire, descriptionaccessoire FROM accessoire WHERE idaccessoire = ?;";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+            pstat.setInt(1, Integer.parseInt(idAccessoire));
+            try(ResultSet rset = pstat.executeQuery()){
+                if(rset.next()){
+                    a = new Accessoire(rset.getInt(1), rset.getString(2), rset.getDouble(3), rset.getString(4), rset.getString(5));
+                }
+            }
+            catch(SQLException e){
+                System.out.println(e.getMessage());
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return a;
     }
 }

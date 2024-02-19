@@ -1,5 +1,7 @@
 package be.velovista.Model.DAL.DAO.AbonnementUtilisateur;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,6 +22,30 @@ public class AbonnementUtilisateurDAO implements IAbonnementUtilisateurDAO {
         catch(SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public int insertAbonnementUtilisateur(int idAbo, int idVelo, int idUser, double prixAbo){
+        String sqlString = "INSERT INTO abonnementutilisateur (id_abonnement, id_velo, id_utilisateur, coutabonnement) VALUES (?, ?, ?, ?) RETURNING id_abonnement_utilisateur;";
+        int idAbonnementUtilisateur = -1;
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+            pstat.setInt(1, idAbo);
+            pstat.setInt(2, idVelo);
+            pstat.setInt(3, idUser);
+            pstat.setDouble(4, prixAbo);
+            try(ResultSet rset = pstat.executeQuery()){
+                if(rset.next()){
+                    idAbonnementUtilisateur = rset.getInt(1);
+                }
+            }
+            catch(SQLException e){
+                System.out.println(e.getMessage());
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return idAbonnementUtilisateur;
     }
 
 }

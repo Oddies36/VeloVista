@@ -11,8 +11,8 @@ public class VeloElectrique extends Velo {
         this.autonomie = autonomie;
     }
 
-    public VeloElectrique(int autonomie, int idVelo, String marque, String type, boolean disponible, String couleur, int taille, int age, double prix, String photo) {
-        super(idVelo, marque, type, disponible, couleur, taille, age, prix, photo);
+    public VeloElectrique(int autonomie, int idVelo, String numeroSerie, String marque, String type, boolean disponible, String couleur, int taille, int age, double prix, String photo) {
+        super(idVelo, numeroSerie, marque, type, disponible, couleur, taille, age, prix, photo);
 
         this.autonomie = autonomie;
     }

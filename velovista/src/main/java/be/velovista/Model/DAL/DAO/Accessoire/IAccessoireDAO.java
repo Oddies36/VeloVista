@@ -7,4 +7,5 @@ import be.velovista.Model.BL.Accessoire;
 public interface IAccessoireDAO {
     public void createAccessoireTable();
     public ArrayList<Accessoire> getAccessoires();
+    public Accessoire getAccessoireFromId(String idAccessoire);
 }

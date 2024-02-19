@@ -2,6 +2,8 @@ package be.velovista.Model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +15,8 @@ import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.DAL.DAO.Abonnement.AbonnementDAO;
 import be.velovista.Model.DAL.DAO.Abonnement.IAbonnementDAO;
+import be.velovista.Model.DAL.DAO.AbonnementUtilisateur.AbonnementUtilisateurDAO;
+import be.velovista.Model.DAL.DAO.AbonnementUtilisateur.IAbonnementUtilisateurDAO;
 import be.velovista.Model.DAL.DAO.Accessoire.AccessoireDAO;
 import be.velovista.Model.DAL.DAO.Accessoire.IAccessoireDAO;
 import be.velovista.Model.DAL.DAO.Location.ILocationDAO;
@@ -32,6 +36,7 @@ public class PrimaryModel implements IModel {
       private ILocationDAO ilocationdao = new LocationDAO();
       private IAccessoireDAO iaccessoiredao = new AccessoireDAO();
       private UserConnected userConnected = new UserConnected();
+      private IAbonnementUtilisateurDAO iabouser = new AbonnementUtilisateurDAO();
       Alert alert;
 
 
@@ -51,11 +56,13 @@ public class PrimaryModel implements IModel {
     //Profile methods
 
     public void getInfoProfilePage(){
-        ClasseConteneur classcon = new ClasseConteneur(null, this.userConnected);
 
-        this.ilocationdao.getLocationByEmail(this.userConnected.getUser().geteMail());
+        
+        // ClasseConteneur classcon = new ClasseConteneur(null, this.userConnected);
 
-        support.firePropertyChange("retour-info-profile", "", classcon);
+        // this.ilocationdao.getLocationByEmail(this.userConnected.getUser().geteMail());
+
+        // support.firePropertyChange("retour-info-profile", "", classcon);
 
 
     }
@@ -287,5 +294,132 @@ public class PrimaryModel implements IModel {
 
     public ArrayList<Accessoire> getAccessoires(){
         return iaccessoiredao.getAccessoires();
+    }
+
+
+    public LocalDate calculDateFin(LocalDate dateDebut, String nomAbonnement){
+        LocalDate dateFin = null;
+        switch(nomAbonnement){
+            case "Journalier":
+            dateFin = dateDebut.plusDays(1);
+            break;
+            case "Hebdomadaire":
+            dateFin = dateDebut.plusWeeks(1);
+            break;
+            case "Mensuel":
+            dateFin = dateDebut.plusMonths(1);
+            break;
+            case "Semestriel":
+            dateFin = dateDebut.plusMonths(6);
+            break;
+            case "Trimestriel":
+            dateFin = dateDebut.plusMonths(3);
+            break;
+            case "Annuel":
+            dateFin = dateDebut.plusYears(1);
+            break;
+            default:
+            break;
+        }
+        return dateFin;
+    }
+    public double calculPrixAbonnement(Velo v, String nomAbonnement){
+        double prixAbonnement = 0.00;
+
+            switch(nomAbonnement){
+                case "Journalier":
+                    prixAbonnement = v.getPrix();
+                break;
+                case "Hebdomadaire":
+                    prixAbonnement = v.getPrix() * 6;
+                break;
+                case "Mensuel":
+                    prixAbonnement = v.getPrix() * 27;
+                break;
+                case "Semestriel":
+                    prixAbonnement = v.getPrix() * 27 * 6;
+                break;
+                case "Trimestriel":
+                    prixAbonnement = v.getPrix() * 27 * 3;
+                break;
+                case "Annuel":
+                    prixAbonnement = v.getPrix() * 25 * 12;
+                break;
+                default:
+                break;
+            }
+        return prixAbonnement;
+    }
+    public double calculPrixAbonnementParType(Velo v, String nomAbonnement){
+        String typeVelo = v.getType();
+        double prixAbonnementBase = this.calculPrixAbonnement(v, nomAbonnement);
+        double prixAbonnementApresCalcul = prixAbonnementBase;
+
+        switch(typeVelo){
+            case "Classique":
+                if (v.getAge() < 2020){
+                    prixAbonnementApresCalcul = prixAbonnementBase - (prixAbonnementBase * 0.30);
+                }
+            break;
+            case "Electrique":
+                if(v.getAutonomieFromVelo() >= 100){
+                    prixAbonnementApresCalcul = prixAbonnementBase + (prixAbonnementBase * 0.25);
+                }
+                else if(v.getAutonomieFromVelo() >= 50 && v.getAutonomieFromVelo() < 100){
+                    prixAbonnementApresCalcul = prixAbonnementBase + (prixAbonnementBase * 0.15);
+                }
+            break;
+            case "Enfant":
+            break;
+            default:
+            break;
+        }
+        return prixAbonnementApresCalcul;
+    }
+
+    public double calculPrixTotalAccessoires(ArrayList<String> listeIdAccessoires){
+        double prixTotal = 0.00;
+        ArrayList<Accessoire> listeAccessoiresChoisis = new ArrayList<>();
+
+        for(String accId : listeIdAccessoires){
+            listeAccessoiresChoisis.add(this.iaccessoiredao.getAccessoireFromId(accId));
+        }
+        for(Accessoire acc : listeAccessoiresChoisis){
+            prixTotal += acc.getPrixAccessoire();
+        }
+        return prixTotal;
+    }
+
+    public ArrayList<Double> calculPrixTotalLocation(Velo v, String nomAbonnement, ArrayList<String> listeAccessoires){
+        ArrayList<Double> listePrix = new ArrayList<>();
+        double prixAbonnement = this.calculPrixAbonnementParType(v, nomAbonnement);
+        double prixAccessoires = this.calculPrixTotalAccessoires(listeAccessoires);
+
+        listePrix.add(prixAbonnement);
+        listePrix.add(prixAccessoires);
+        listePrix.add(prixAbonnement + prixAccessoires);
+
+        return listePrix;
+    }
+
+    public int createAbonnement(Velo v, String nomAbo, double prixAbo){
+        int idAbo = this.iabonnementdao.getAbonnementId(nomAbo);
+        int idAboUser = this.iabouser.insertAbonnementUtilisateur(v.getIdVelo(), idAbo, this.userConnected.getUser().getIdUser(), prixAbo);
+
+        return idAboUser;
+    }
+    public void createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin){
+        this.ilocationdao.insertLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+    }
+
+    public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin){
+        int exists = ilocationdao.checkCurrentLocation(dateDebut, dateFin);
+
+        if(exists > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

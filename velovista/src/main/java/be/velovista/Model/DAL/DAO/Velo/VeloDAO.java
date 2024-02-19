@@ -98,7 +98,7 @@ public class VeloDAO implements IVeloDAO{
         try(PreparedStatement pstat =  DBConnection.conn.prepareStatement(sqlString)){
             ResultSet rset = pstat.executeQuery();
             while(rset.next()){
-                vc = new VeloClassique(rset.getInt(10), rset.getInt(1), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
+                vc = new VeloClassique(rset.getInt(10), rset.getInt(1), rset.getString(2), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
                 result.add(vc);
             }
             return result;
@@ -117,7 +117,7 @@ public class VeloDAO implements IVeloDAO{
         try(PreparedStatement pstat =  DBConnection.conn.prepareStatement(sqlString)){
             ResultSet rset = pstat.executeQuery();
             while(rset.next()){
-                vc = new VeloElectrique(rset.getInt(11), rset.getInt(1), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
+                vc = new VeloElectrique(rset.getInt(11), rset.getInt(1), rset.getString(2), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
                 result.add(vc);
             }
             return result;
@@ -136,7 +136,7 @@ public class VeloDAO implements IVeloDAO{
         try(PreparedStatement pstat =  DBConnection.conn.prepareStatement(sqlString)){
             ResultSet rset = pstat.executeQuery();
             while(rset.next()){
-                vc = new VeloEnfant(rset.getInt(1), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
+                vc = new VeloEnfant(rset.getInt(1), rset.getString(2), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
                 result.add(vc);
             }
             return result;
@@ -158,13 +158,13 @@ public class VeloDAO implements IVeloDAO{
                     String type = rset.getString(3);
                     switch (type){
                         case "Classique":
-                            v = new VeloClassique(rset.getInt(10), rset.getInt(1), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
+                            v = new VeloClassique(rset.getInt(10), rset.getInt(1), rset.getString(2), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
                             break;
                         case "Electrique":
-                            v = new VeloElectrique(rset.getInt(11), rset.getInt(1), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
+                            v = new VeloElectrique(rset.getInt(11), rset.getInt(1), rset.getString(2), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
                             break;
                         case "Enfant":
-                            v = new VeloEnfant(rset.getInt(1), rset.getString(5), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
+                            v = new VeloEnfant(rset.getInt(1), rset.getString(5), rset.getString(2), rset.getString(3), rset.getBoolean(7), rset.getString(12), rset.getInt(6), rset.getInt(4), rset.getDouble(8), rset.getString(9));
                             break;
 
                 }

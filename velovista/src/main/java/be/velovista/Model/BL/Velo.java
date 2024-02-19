@@ -3,6 +3,7 @@ package be.velovista.Model.BL;
 public abstract class Velo {
     
     private int idVelo;
+    private String numeroSerie;
     private String marque;
     private String type;
     private boolean disponible;
@@ -18,7 +19,12 @@ public abstract class Velo {
     public void setIdVelo(int idVelo) {
         this.idVelo = idVelo;
     }
-
+    public String getNumeroSerie(){
+        return numeroSerie;
+    }
+    public void setNumeroSerie(String numeroSerie){
+        this.numeroSerie = numeroSerie;
+    }
     public String getModele() {
         return marque;
     }
@@ -75,8 +81,9 @@ public abstract class Velo {
         this.photo = photo;
     }
 
-    public Velo(int idVelo, String marque, String type, boolean disponible, String couleur, int taille, int age, double prix, String photo){
+    public Velo(int idVelo, String numeroSerie, String marque, String type, boolean disponible, String couleur, int taille, int age, double prix, String photo){
         this.idVelo = idVelo;
+        this.numeroSerie = numeroSerie;
         this.marque = marque;
         this.type = type;
         this.disponible = disponible;

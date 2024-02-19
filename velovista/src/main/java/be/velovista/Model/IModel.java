@@ -1,6 +1,7 @@
 package be.velovista.Model;
 
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import be.velovista.Model.BL.Abonnement;
@@ -26,5 +27,13 @@ public interface IModel {
     public void getListeAbo();
     public ArrayList<Accessoire> getAccessoires();
     public ArrayList<Abonnement> getListeChoixAbo();
-    //public void getInfoProfilePage();
+    public LocalDate calculDateFin(LocalDate dateDebut, String nomAbonnement);
+    public double calculPrixAbonnement(Velo v, String nomAbonnement);
+    public double calculPrixAbonnementParType(Velo v, String nomAbonnement);
+    public double calculPrixTotalAccessoires(ArrayList<String> listeIdAccessoires);
+    public ArrayList<Double> calculPrixTotalLocation(Velo v, String nomAbonnement, ArrayList<String> listeAccessoires);
+    public int createAbonnement(Velo v, String nomAbo, double prixAbo);
+    public void createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin);
+    public void getInfoProfilePage();
+    public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin);
 }

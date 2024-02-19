@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.velovista.Model.BL.Location;
@@ -20,7 +21,7 @@ public class LocationDAO implements ILocationDAO {
   }
 
   public void createLocationTable(){
-    String sqlString = "CREATE TABLE IF NOT EXISTS LocationVelo (id_location_velo SERIAL, id_abonnement int, id_accessoire int, prixtotal DECIMAL(10,2), DateDebut DATE, DateFin DATE, PRIMARY KEY (id_location_velo),FOREIGN KEY (id_abonnement) REFERENCES abonnement(idabonnement), FOREIGN KEY (id_accessoire) REFERENCES accessoire(idaccessoire))";
+    String sqlString = "CREATE TABLE IF NOT EXISTS LocationVelo (id_location_velo SERIAL, id_abonnementutilisateur integer, prixtotal DECIMAL(10,2), DateDebut DATE, DateFin DATE, PRIMARY KEY (id_location_velo),FOREIGN KEY (id_abonnementutilisateur) REFERENCES abonnementutilisateur(id_abonnement_utilisateur))";
 
     try(Statement stat = DBConnection.conn.createStatement()){
       stat.executeQuery(sqlString);
@@ -74,5 +75,48 @@ public class LocationDAO implements ILocationDAO {
       System.out.println(e.getMessage());
     }
     return result;
+  }
+
+  public void insertLocation(int idAbonnementUtilisatuer, double prixTotal, LocalDate dateDebut, LocalDate dateFin){
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String dateDebutString = dateDebut.format(dtf);
+    String dateFinString = dateFin.format(dtf);
+    
+    String sqlString = "INSERT INTO locationvelo (id_abonnementutilisateur, prixtotal, datedebut, datefin) VALUES (?, ?, ?, ?);";
+
+    try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+      pstat.setInt(1, idAbonnementUtilisatuer);
+      pstat.setDouble(2, prixTotal);
+      pstat.setObject(3, dateDebut);
+      pstat.setObject(4, dateFin);
+      pstat.executeUpdate();
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+  }
+  
+  public int checkCurrentLocation(LocalDate dateDebut, LocalDate dateFin){
+    int count = -1;
+    LocalDate now = LocalDate.now();
+    String sqlString = "SELECT count(id_location_velo) FROM locationvelo WHERE ? BETWEEN ? AND ?;";
+
+    try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+      pstat.setObject(1, now);
+      pstat.setObject(2, dateDebut);
+      pstat.setObject(3, dateFin);
+      try(ResultSet rset = pstat.executeQuery()){
+        if(rset.next()){
+          count = rset.getInt(1);
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    return count;
   }
 }

@@ -67,5 +67,24 @@ public class AbonnementDAO implements IAbonnementDAO{
     return listeAbo;
   }
 
-  
+  public int getAbonnementId(String nomAbo){
+    String sqlString = "SELECT idabonnement FROM Abonnement WHERE nomabonnement = ?;";
+    int idAbo = -1;
+
+    try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+      pstat.setString(1, nomAbo);
+      try(ResultSet rset = pstat.executeQuery()){
+        if(rset.next()){
+          idAbo = rset.getInt(1);
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    return idAbo;
+  }
 }

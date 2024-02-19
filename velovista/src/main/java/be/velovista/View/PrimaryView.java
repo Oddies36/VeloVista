@@ -3,6 +3,7 @@ package be.velovista.View;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -43,7 +44,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class PrimaryView extends Application implements IView, PropertyChangeListener {
@@ -87,6 +87,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         //Velo v = new VeloClassique(10, 1, "zebi", "Classique", true, "blanc", 54, 2022, 500.00, "https://www.statebicycle.com/cdn/shop/products/6061-eBikeCommuter-MatteBlack_1.jpg?v=1684443969");
         //ArrayList<String> test = new ArrayList<>();
         // Préparation de la première fenêtre
+        //LocalDate tempDate = LocalDate.now();
         showLoginScreen();
         stage.show();
     }
@@ -471,30 +472,45 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showProfilePage(){
-
+    public void showProfilePage(String photoLocationActual){
         //parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
-        //vbox pour le titre et text en dessous
-        VBox vboxTitre = new VBox();
-        vboxTitre.setAlignment(Pos.CENTER);
-        vboxTitre.setPadding(new Insets(20, 0, 0, 0));
+        BorderPane bp = new BorderPane();
+        GridPane gp = new GridPane();
+        gp.setAlignment(Pos.CENTER);
+        bp.setCenter(gp);
 
-        //titre profil
-        Label titreProfil = new Label("Mon profil");
-        titreProfil.setStyle("-fx-font-size: 50;");
+        //top
+        HBox hboxTitreRetour = new HBox();
+        hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        //vbox pour velo actuel
+        Button but =  new Button("\u2190");
+        setButtonStyle(but, "retour");
+        Supplier<String[]> backSupplier = () -> new String[] {};
+        but.setOnAction(control.generateEventHandlerAction("retour-main-page", backSupplier));
+
+        hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
+
+        HBox hboxTitre = new HBox();
+        HBox.setHgrow(hboxTitre, Priority.ALWAYS);
+        hboxTitre.setAlignment(Pos.CENTER);
+
+        Label titre = new Label("Mon profil");
+        titre.setStyle("-fx-font-size: 50;");
+
+        //center
         VBox veloActuel = new VBox();
-        //Image img = new Image(null);
+        Image img = new Image(photoLocationActual, true);
+        ImageView imgview = new ImageView(img);
 
-        vboxTitre.getChildren().addAll(titreProfil);
-        actualParent.getChildren().addAll(vboxTitre);
-
+        hboxTitre.getChildren().addAll(titre);
+        hboxTitreRetour.getChildren().addAll(but, hboxTitre);
+        bp.setTop(hboxTitreRetour);
+        actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
-        scene = new Scene(actualParent, 800, 700);
+        scene = new Scene(actualParent, 1200, 700);
         stage.setScene(scene);
         stage.centerOnScreen();
 
@@ -786,6 +802,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
+    
     public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires){
         ArrayList<String> choixAccessoiresId = new ArrayList<>();
 
@@ -873,6 +890,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
+
     public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo){
         //parent
         actualParent = new VBox();
@@ -918,7 +936,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             RadioButton choixAboUser = (RadioButton) tog.getSelectedToggle();
             if(choixAboUser != null){
                 String choixAboUserString = choixAboUser.getText();
-                control.testMethod(v, listeAccessoires, datepick.getValue(), choixAboUserString);
+                control.calculDesPrix(v, listeAccessoires, datepick.getValue(), choixAboUserString);
             }
             else{
                 control.showAlert(AlertType.WARNING, "Abonnement", "Vous devez choisir un abonnement");
@@ -938,7 +956,9 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showRecapView(){
+
+    public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin){
+        DecimalFormat df = new DecimalFormat("#.00");
         //parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
@@ -966,8 +986,49 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Récapitulatif");
         titre.setStyle("-fx-font-size: 50;");
 
+        //Center
+        VBox vboxRecapContenu = new VBox();
+        HBox hboxImgVelo = new HBox();
+
+        Image img = new Image(v.getPhoto(), true);
+        ImageView imgview = new ImageView(img);
+        imgview.setFitWidth(100);
+        imgview.setPreserveRatio(true);
+
+        VBox vboxInfoVelo = new VBox();
+        Label labMarque = new Label(v.getModele());
+        Label labType = new Label(v.getType());
+        Label labPrix = new Label(Double.toString(v.getPrix()) + "€ par jour");
+        hboxImgVelo.setAlignment(Pos.CENTER);
+
+        VBox vboxAboInfo = new VBox();
+        Label labTypeAbo = new Label(nomAbo);
+        Label labDateDebut = new Label("Début de la location: " + dateDebut.toString());
+        Label labDateFin = new Label("Fin de la location: " + dateFin.toString());
+        vboxAboInfo.setAlignment(Pos.CENTER);
+
+        VBox vboxPrix = new VBox();
+        Label labPrixAbo = new Label("Prix de l'abonnement: " + df.format(prixAbo) + "€");
+        Label labPrixAcc = new Label("Prix des accessoires: " + df.format(prixAcc) + "€");
+        Label labPrixTotal = new Label("Prix total: " + df.format(prixTotal) + "€");
+        vboxPrix.setAlignment(Pos.CENTER);
+
+        //Bottom
+        Button validerBut = new Button("Valider");
+        setButtonStyle(validerBut, "rond");
+        BorderPane.setAlignment(validerBut, Pos.CENTER);
+/////////
+        validerBut.setOnAction(event -> {this.control.createAboAndLocation(v, prixAbo, prixTotal, nomAbo, dateDebut, dateFin);});
+
+        vboxPrix.getChildren().addAll(labPrixAbo, labPrixAcc, labPrixTotal);
+        vboxAboInfo.getChildren().addAll(labTypeAbo, labDateDebut, labDateFin);
+        hboxImgVelo.getChildren().addAll(imgview, vboxInfoVelo);
+        vboxInfoVelo.getChildren().addAll(labMarque, labType, labPrix);
+        vboxRecapContenu.getChildren().addAll(hboxImgVelo, vboxAboInfo, vboxPrix);
         hboxTitreRetour.getChildren().addAll(but, titre);
         bp.setTop(hboxTitreRetour);
+        bp.setCenter(vboxRecapContenu);
+        bp.setBottom(validerBut);
         actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 500, 700);
@@ -1018,6 +1079,14 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             nomBouton.setOnMousePressed(e -> nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #1f2a50; -fx-text-fill: white;"));
             nomBouton.setOnMouseReleased(e -> nomBouton.setStyle("-fx-font-size: 20px; -fx-background-radius: 20; -fx-padding: 10 20 10 20; -fx-background-color: #323b6f; -fx-text-fill: white;"));
         }
+    }
+
+
+    public void showAlert(AlertType alertType, String title, String context){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(context);
+        alert.showAndWait();
     }
 
 
