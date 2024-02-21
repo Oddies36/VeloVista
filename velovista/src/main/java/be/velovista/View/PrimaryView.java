@@ -24,6 +24,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
@@ -625,8 +626,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
             Label couleur = new Label("Couleur: " + velclass.getCouleur().toString());
             Label prix = new Label("Prix: " + String.valueOf(velclass.getPrix()) + "€");
+            Label dispo = new Label(this.setDispoText(velclass.isDisponible()));
+            setLabelColor(dispo);
 
-            vbox.getChildren().addAll(imgview, couleur, prix);
+            vbox.getChildren().addAll(imgview, couleur, prix, dispo);
 
             if(velclass instanceof VeloClassique){
                 Label vitesses = new Label("Vitesses: " + velclass.getVitessesFromVelo());
@@ -760,7 +763,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setLabelStyle(taille);
         Label age = new Label("Année de construction: " + Integer.toString(v.getAge()));
         setLabelStyle(age);
-        Label prix = new Label("Prix: " + Double.toString(v.getPrix()));
+        Label prix = new Label("Prix: " + Double.toString(v.getPrix()) + "€");
         setLabelStyle(prix);
 
         GridPane.setMargin(veloInfo, new Insets(0, 0, 0, 30));
@@ -773,6 +776,9 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         HBox bottomButs = new HBox();
         bottomButs.setAlignment(Pos.CENTER);
         Button louerBut = new Button("Louer");
+        if(!v.isDisponible()){
+            louerBut.setDisable(true);
+        }
         setButtonStyle(louerBut, "rond");
         Button reserverBut = new Button("Reserver");
         setButtonStyle(reserverBut, "rond");
@@ -957,7 +963,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin){
+    public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires){
         DecimalFormat df = new DecimalFormat("#.00");
         //parent
         actualParent = new VBox();
@@ -1014,11 +1020,17 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         vboxPrix.setAlignment(Pos.CENTER);
 
         //Bottom
+        HBox hboxBottomButs = new HBox();
         Button validerBut = new Button("Valider");
         setButtonStyle(validerBut, "rond");
-        BorderPane.setAlignment(validerBut, Pos.CENTER);
+        Button recommencerBut = new Button("Recommencer");
+        setButtonStyle(recommencerBut, "rond");
+        BorderPane.setAlignment(hboxBottomButs, Pos.CENTER);
+
 /////////
-        validerBut.setOnAction(event -> {this.control.createAboAndLocation(v, prixAbo, prixTotal, nomAbo, dateDebut, dateFin);});
+        validerBut.setOnAction(event -> {this.control.createAboAndLocation(v, prixAbo, prixTotal, nomAbo, dateDebut, dateFin, listeAccessoires);});
+        Supplier<String[]> recommencerSupplier = () -> new String[] {""};
+        recommencerBut.setOnAction(control.generateEventHandlerAction("retour-main-page", recommencerSupplier));
 
         vboxPrix.getChildren().addAll(labPrixAbo, labPrixAcc, labPrixTotal);
         vboxAboInfo.getChildren().addAll(labTypeAbo, labDateDebut, labDateFin);
@@ -1026,9 +1038,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         vboxInfoVelo.getChildren().addAll(labMarque, labType, labPrix);
         vboxRecapContenu.getChildren().addAll(hboxImgVelo, vboxAboInfo, vboxPrix);
         hboxTitreRetour.getChildren().addAll(but, titre);
+        hboxBottomButs.getChildren().addAll(validerBut, recommencerBut);
         bp.setTop(hboxTitreRetour);
         bp.setCenter(vboxRecapContenu);
-        bp.setBottom(validerBut);
+        bp.setBottom(hboxBottomButs);
         actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 500, 700);
@@ -1086,12 +1099,30 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(context);
+        ButtonType okBut = new ButtonType("Ok");
+        alert.getButtonTypes().setAll(okBut);
         alert.showAndWait();
     }
 
-
     public void setLabelStyle(Label l){
         l.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; ");
+    }
+
+    public String setDispoText(Boolean bool){
+        if(bool){
+            return "Disponible";
+        }
+        else{
+            return "Indisponible";
+        }
+    }
+    public void setLabelColor(Label l){
+        if(l.getText().equals("Disponible")){
+            l.setStyle("-fx-text-fill: green");
+        }
+        else{
+            l.setStyle("-fx-text-fill: red");
+        }
     }
 
     @Override

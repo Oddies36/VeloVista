@@ -48,4 +48,19 @@ public class Accessoire_LocationDAO implements IAccessoire_LocationDAO {
         }
         return listeAccessoireUser;
     }
+
+    public void insertAccessoireLocation(ArrayList<String> listeAccessoires, int idLoc){
+        String sqlString = "INSERT INTO accessoire_location (idaccessoire, id_location_velo) VALUES (?, ?)";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+            for(String a : listeAccessoires){
+                pstat.setInt(1, Integer.parseInt(a));
+                pstat.setInt(2, idLoc);
+                pstat.executeUpdate();
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }

@@ -175,5 +175,28 @@ public class VeloDAO implements IVeloDAO{
         }
         return v;
     }
+
+    public void updateVeloToDispo(int idVelo){
+        String sqString ="UPDATE velo SET estdisponible = true WHERE idvelo = ?";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqString)){
+            pstat.setInt(1, idVelo);
+            pstat.executeUpdate();
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    public void updateVeloToIndispo(int idVelo){
+        String sqString ="UPDATE velo SET estdisponible = false WHERE idvelo = ?";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqString)){
+            pstat.setInt(1, idVelo);
+            pstat.executeUpdate();
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
 

@@ -77,23 +77,28 @@ public class LocationDAO implements ILocationDAO {
     return result;
   }
 
-  public void insertLocation(int idAbonnementUtilisatuer, double prixTotal, LocalDate dateDebut, LocalDate dateFin){
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    String dateDebutString = dateDebut.format(dtf);
-    String dateFinString = dateFin.format(dtf);
-    
-    String sqlString = "INSERT INTO locationvelo (id_abonnementutilisateur, prixtotal, datedebut, datefin) VALUES (?, ?, ?, ?);";
+  public int insertLocation(int idAbonnementUtilisatuer, double prixTotal, LocalDate dateDebut, LocalDate dateFin){
+    String sqlString = "INSERT INTO locationvelo (id_abonnementutilisateur, prixtotal, datedebut, datefin) VALUES (?, ?, ?, ?) RETURNING id_location_velo;";
+    int idLoc = -1;
 
     try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
       pstat.setInt(1, idAbonnementUtilisatuer);
       pstat.setDouble(2, prixTotal);
       pstat.setObject(3, dateDebut);
       pstat.setObject(4, dateFin);
-      pstat.executeUpdate();
+      try(ResultSet rset = pstat.executeQuery()){
+        if(rset.next()){
+          idLoc = rset.getInt(1);
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
     }
     catch(SQLException e){
       System.out.println(e.getMessage());
     }
+    return idLoc;
   }
   
   public int checkCurrentLocation(LocalDate dateDebut, LocalDate dateFin){

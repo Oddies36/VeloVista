@@ -33,7 +33,10 @@ public interface IModel {
     public double calculPrixTotalAccessoires(ArrayList<String> listeIdAccessoires);
     public ArrayList<Double> calculPrixTotalLocation(Velo v, String nomAbonnement, ArrayList<String> listeAccessoires);
     public int createAbonnement(Velo v, String nomAbo, double prixAbo);
-    public void createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin);
+    public int createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin);
     public void getInfoProfilePage();
     public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin);
+    public void createAccessoireLocation(ArrayList<String> listeAccessoires, int idLoc);
+    public void updateVeloToDispo(int idVelo);
+    public void updateVeloToIndispo(int idVelo);
 }

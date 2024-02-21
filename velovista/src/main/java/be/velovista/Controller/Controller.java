@@ -192,30 +192,32 @@ public class Controller {
         this.view.showChoixAbonnements(this.model.getVeloChoixUtilisateur(Integer.parseInt(idVelo)), choixAccessoires, this.model.getListeChoixAbo());
     }
 
-    public void calculDesPrix(Velo v, ArrayList<String> liseAccessoires, LocalDate date, String abo){
+    public void calculDesPrix(Velo v, ArrayList<String> listeAccessoires, LocalDate date, String abo){
 
         if (date.isBefore(LocalDate.now())){
             this.view.showAlert(AlertType.ERROR, "Dates", "La date choisie est dans le passé.");
         }
         else{
-            ArrayList<Double> listePrix = this.model.calculPrixTotalLocation(v, abo, liseAccessoires);
+            ArrayList<Double> listePrix = this.model.calculPrixTotalLocation(v, abo, listeAccessoires);
             LocalDate dateFin = this.model.calculDateFin(date, abo);
-            this.view.showRecapView(v, listePrix.get(0), listePrix.get(1), listePrix.get(2), abo, date, dateFin);
+            this.view.showRecapView(v, listePrix.get(0), listePrix.get(1), listePrix.get(2), abo, date, dateFin, listeAccessoires);
         }
     }
 
 
-    public void createAboAndLocation(Velo v, double prixAbo, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin){
+    public void createAboAndLocation(Velo v, double prixAbo, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires){
         if(this.model.checkLocationExists(dateDebut, dateFin)){
             this.view.showAlert(AlertType.ERROR, "Location", "Vous avez déjà une location en cours!");
         }
         else{
             int idAbonnementUtilisateur = this.model.createAbonnement(v, nomAbo, prixAbo);
-            this.model.createLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+            int idLoc = this.model.createLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+            this.model.createAccessoireLocation(listeAccessoires, idLoc);
+            this.model.updateVeloToIndispo(v.getIdVelo());
+            this.view.showAlert(AlertType.CONFIRMATION, "Réussi!", "Votre paiement a bien été accepté. Merci pour votre confiance.");
+            this.view.showMainScreen();
         }
     }
-
-
 
     public void showAlert(AlertType alertType, String titre, String contenu){
         this.model.showAlert(alertType, titre, contenu);

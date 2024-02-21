@@ -19,6 +19,8 @@ import be.velovista.Model.DAL.DAO.AbonnementUtilisateur.AbonnementUtilisateurDAO
 import be.velovista.Model.DAL.DAO.AbonnementUtilisateur.IAbonnementUtilisateurDAO;
 import be.velovista.Model.DAL.DAO.Accessoire.AccessoireDAO;
 import be.velovista.Model.DAL.DAO.Accessoire.IAccessoireDAO;
+import be.velovista.Model.DAL.DAO.Accessoire_Location.Accessoire_LocationDAO;
+import be.velovista.Model.DAL.DAO.Accessoire_Location.IAccessoire_LocationDAO;
 import be.velovista.Model.DAL.DAO.Location.ILocationDAO;
 import be.velovista.Model.DAL.DAO.Location.LocationDAO;
 import be.velovista.Model.DAL.DAO.User.IUserDAO;
@@ -37,6 +39,7 @@ public class PrimaryModel implements IModel {
       private IAccessoireDAO iaccessoiredao = new AccessoireDAO();
       private UserConnected userConnected = new UserConnected();
       private IAbonnementUtilisateurDAO iabouser = new AbonnementUtilisateurDAO();
+      private IAccessoire_LocationDAO iacclocdao = new Accessoire_LocationDAO();
       Alert alert;
 
 
@@ -404,12 +407,23 @@ public class PrimaryModel implements IModel {
 
     public int createAbonnement(Velo v, String nomAbo, double prixAbo){
         int idAbo = this.iabonnementdao.getAbonnementId(nomAbo);
-        int idAboUser = this.iabouser.insertAbonnementUtilisateur(v.getIdVelo(), idAbo, this.userConnected.getUser().getIdUser(), prixAbo);
+        int idAboUser = this.iabouser.insertAbonnementUtilisateur(idAbo, v.getIdVelo(), this.userConnected.getUser().getIdUser(), prixAbo);
 
         return idAboUser;
     }
-    public void createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin){
-        this.ilocationdao.insertLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+    public int createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin){
+        int idLoc = this.ilocationdao.insertLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+
+        return idLoc;
+    }
+    public void createAccessoireLocation(ArrayList<String> listeAccessoires, int idLoc){
+        this.iacclocdao.insertAccessoireLocation(listeAccessoires, idLoc);
+    }
+    public void updateVeloToDispo(int idVelo){
+        this.ivelodao.updateVeloToDispo(idVelo);
+    }
+    public void updateVeloToIndispo(int idVelo){
+        this.ivelodao.updateVeloToIndispo(idVelo);
     }
 
     public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin){

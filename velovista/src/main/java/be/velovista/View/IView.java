@@ -25,5 +25,5 @@ public interface IView {
   public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires);
   public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo);
   public void showAlert(AlertType alertType, String title, String context);
-  public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin);
+  public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires);
 }
