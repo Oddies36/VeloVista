@@ -93,6 +93,12 @@ public class Controller {
             case "retour-main-page":
                 t = (x) -> this.showMainPage();
             break;
+            case "sauvegarde-profil":
+                t = (x) -> this.sauvegardeProfil(x [0], x [1], x [2], x [3]);
+            break;
+            case "retourner-velo":
+                t = (x) -> this.retournerVelo(x [0]);
+            break;
             default:
                 throw new InvalidParameterException(action + " n'existe pas.");
         }
@@ -107,6 +113,19 @@ public class Controller {
                 System.exit(0);
             }
         };
+    }
+
+    public void retournerVelo(String idVelo){
+        int intIdVelo = Integer.parseInt(idVelo);
+        if(this.model.updateVeloActuelStatus(intIdVelo)){
+            this.view.showAlert(AlertType.CONFIRMATION, "Retour vélo", "Vous avez bien retourné votre vélo");
+            this.view.showMainScreen();
+        }
+    }
+
+    public void sauvegardeProfil(String nouveauNomUser, String nouveauPrenomUser, String nouveauEmailUser, String nouveauNumTelUser){
+
+        this.model.sauvegardeProfil(nouveauNomUser, nouveauPrenomUser, nouveauEmailUser, nouveauNumTelUser);
     }
 
     public void showMainPage(){
@@ -206,7 +225,7 @@ public class Controller {
 
 
     public void createAboAndLocation(Velo v, double prixAbo, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires){
-        if(this.model.checkLocationExists(dateDebut, dateFin)){
+        if(this.model.checkAboUserExists()){
             this.view.showAlert(AlertType.ERROR, "Location", "Vous avez déjà une location en cours!");
         }
         else{

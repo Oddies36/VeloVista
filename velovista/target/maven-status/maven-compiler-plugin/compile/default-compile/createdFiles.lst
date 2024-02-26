@@ -1,5 +1,6 @@
 be\velovista\Model\BL\Velo.class
 be\velovista\Model\BL\VeloEnfant.class
+be\velovista\Model\DAL\DAO\Merite_utilisateur\IMerite_utilisateurDAO.class
 be\velovista\Controller\Controller$2.class
 be\velovista\App.class
 be\velovista\Model\DAL\DAO\Accessoire\AccessoireDAO.class
@@ -13,12 +14,16 @@ be\velovista\Model\DAL\DAO\Location\ILocationDAO.class
 be\velovista\Model\BL\User.class
 be\velovista\Model\DAL\DBProperties.class
 be\velovista\Model\DAL\DAO\User\UserDAO.class
+be\velovista\Model\BL\Merites.class
 be\velovista\Model\DAL\DAO\Accessoire\IAccessoireDAO.class
 be\velovista\Model\DAL\DAO\User\IUserDAO.class
 be\velovista\Model\DAL\DAO\Location\LocationDAO.class
 be\velovista\Model\BL\Abonnement.class
 be\velovista\Model\IModel.class
 be\velovista\Model\BL\ClasseConteneur.class
+be\velovista\Model\DAL\DAO\Merites\MeritesDAO.class
+be\velovista\Model\DAL\DAO\Merite_utilisateur\Merite_utilisateurDAO.class
+be\velovista\Model\DAL\DAO\Merites\IMeritesDAO.class
 be\velovista\Model\DAL\DAO\Velo\IVeloDAO.class
 be\velovista\Model\DAL\DAO\Accessoire_Location\IAccessoire_LocationDAO.class
 be\velovista\Model\PrimaryModel.class

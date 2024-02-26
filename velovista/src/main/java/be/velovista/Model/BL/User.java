@@ -7,7 +7,14 @@ public class User {
     private String prenom;
     private String eMail;
     private String numTelephone;
+    private int totalKM;
 
+    public int getTotalKM() {
+        return totalKM;
+    }
+    public void setTotalKM(int totalKM) {
+        this.totalKM = totalKM;
+    }
     public int getIdUser() {
         return idUser;
     }
@@ -43,12 +50,13 @@ public class User {
         this.numTelephone = numTelephone;
     }
 
-    public User(int idUser, String nom, String prenom, String eMail, String numTelephone){
+    public User(int idUser, String nom, String prenom, String eMail, String numTelephone, int totalKM){
         this.idUser = idUser;
         this.nom = nom;
         this.prenom = prenom;
         this.eMail = eMail;
         this.numTelephone = numTelephone;
+        this.totalKM = totalKM;
     }
     
 }

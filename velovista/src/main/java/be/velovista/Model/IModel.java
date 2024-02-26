@@ -35,8 +35,13 @@ public interface IModel {
     public int createAbonnement(Velo v, String nomAbo, double prixAbo);
     public int createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin);
     public void getInfoProfilePage();
-    public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin);
+    //public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin);
     public void createAccessoireLocation(ArrayList<String> listeAccessoires, int idLoc);
     public void updateVeloToDispo(int idVelo);
     public void updateVeloToIndispo(int idVelo);
+    public void sauvegardeProfil(String nouveauNomUser, String nouveauPrenomUser, String nouveauEmailUser, String nouveauNumTelUser);
+    public boolean checkAboUserExists();
+    public void updateAbonnementUserToInactif();
+    public boolean updateVeloActuelStatus(int intIdVelo);
+
 }

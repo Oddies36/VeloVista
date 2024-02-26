@@ -5,16 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.velovista.Model.BL.Location;
 import be.velovista.Model.DAL.DBConnection;
-import be.velovista.Model.DAL.DAO.User.IUserDAO;
-import be.velovista.Model.DAL.DAO.User.UserDAO;
+//import be.velovista.Model.DAL.DAO.User.IUserDAO;
+//import be.velovista.Model.DAL.DAO.User.UserDAO;
 
 public class LocationDAO implements ILocationDAO {
-  private IUserDAO iuserdao = new UserDAO();
+  //private IUserDAO iuserdao = new UserDAO();
     
   public LocationDAO(){
     DBConnection.getConnection();
@@ -123,5 +123,28 @@ public class LocationDAO implements ILocationDAO {
       System.out.println(e.getMessage());
     }
     return count;
+  }
+
+  public LocalDate getDateDebutCurrentLocation(int idUser){
+    String sqlString = "select datedebut from locationvelo as loc inner join abonnementutilisateur as abouser ON abouser.id_abonnement_utilisateur = loc.id_abonnementutilisateur where abouser.isactif = true AND abouser.id_utilisateur = ?";
+    String dateDebutString = "";
+    LocalDate dateDebut = null;
+
+    try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+      pstat.setInt(1, idUser);
+      try(ResultSet rset = pstat.executeQuery()){
+        if(rset.next()){
+          dateDebutString = rset.getString(1);
+          dateDebut = LocalDate.parse(dateDebutString);
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    return dateDebut;
   }
 }

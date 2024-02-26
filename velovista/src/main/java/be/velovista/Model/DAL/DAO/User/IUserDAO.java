@@ -10,4 +10,5 @@ public interface IUserDAO {
     public void getUserEmail();
     public void createUserAccount(String nom, String prenom, String Email, String numTel, String hashedPassword);
     public void changeUserPassword(String hashedPassword, String Email);
+    public void updateTotalKMUser(int newKmUser, int idUser);
 }

@@ -69,7 +69,6 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
                 if (evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
                     this.showListeVeloClassique((ArrayList<Velo>) evt.getNewValue());
                 break;
-            default:
             case "resultat-choix-velo-utilisateur":
                 if(evt.getNewValue() instanceof Velo)
                     this.showChoixVeloUtilisateur((Velo) evt.getNewValue());
@@ -77,6 +76,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             case "resultat-nom-liste-abonnements":
                 if(evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
                     this.showListeAboDispo((ArrayList<Abonnement>) evt.getNewValue());
+            case "show-page-profil":
+                if(evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
+                    this.showProfilePage((ArrayList<ArrayList<String>>) evt.getNewValue());
+            case "test":
+                
+            default:
+                break;
         }
     }
 
@@ -473,7 +479,14 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showProfilePage(String photoLocationActual){
+    public void showProfilePage(ArrayList<ArrayList<String>> listeStringVeloUser){
+
+
+
+
+        ArrayList<String> listeStringVeloActuel = listeStringVeloUser.get(0);
+        ArrayList<String> listeStringUser = listeStringVeloUser.get(1);
+        
         //parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
@@ -502,13 +515,73 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         titre.setStyle("-fx-font-size: 50;");
 
         //center
+        VBox vboxCentral = new VBox();
         VBox veloActuel = new VBox();
-        Image img = new Image(photoLocationActual, true);
-        ImageView imgview = new ImageView(img);
+        if(listeStringVeloActuel.size() > 0){
+            HBox hboxVeloActBoutonRetour = new HBox();
+            Image img = new Image(listeStringVeloActuel.get(9), true);
+            ImageView imgview = new ImageView(img);
+            imgview.setFitWidth(100);
+            imgview.setPreserveRatio(true);
+            Label modeleVelo = new Label(listeStringVeloActuel.get(2));
+            
+            Button retournerVelo = new Button("Retourner le vélo");
+            setButtonStyle(retournerVelo, "rond");
+            
+            hboxVeloActBoutonRetour.getChildren().addAll(imgview, retournerVelo);
+            veloActuel.getChildren().addAll(hboxVeloActBoutonRetour, modeleVelo);
 
+            Supplier<String[]> retournerVeloSupplier = () -> new String[] {listeStringVeloActuel.get(0)};
+            retournerVelo.setOnAction(control.generateEventHandlerAction("retourner-velo", retournerVeloSupplier));
+
+        }
+
+        VBox vboxProfilUtilisatuer = new VBox();
+        HBox hboxNom = new HBox();
+        Label nom = new Label("Nom: " + listeStringUser.get(1));
+        nom.setMinWidth(300);
+        TextField nomField = new TextField();
+        hboxNom.getChildren().addAll(nom, nomField);
+        HBox.setMargin(nomField, null);
+
+        HBox hboxPrenom = new HBox();
+        Label prenom = new Label("Prénom: " + listeStringUser.get(2));
+        prenom.setMinWidth(300);
+        TextField prenomField = new TextField();
+        hboxPrenom.getChildren().addAll(prenom, prenomField);
+
+        HBox hboxEmail = new HBox();
+        Label email = new Label("Email: " + listeStringUser.get(3));
+        email.setMinWidth(300);
+        TextField emailField = new TextField();
+        hboxEmail.getChildren().addAll(email, emailField);
+
+        HBox hboxNumTel = new HBox();
+        Label numTel = new Label("Numéro de téléphone: " + listeStringUser.get(4));
+        numTel.setMinWidth(300);
+        TextField numTelField = new TextField();
+        hboxNumTel.getChildren().addAll(numTel, numTelField);
+
+        //bottom
+        HBox hboxBotButtons = new HBox();
+        Button saveBut = new Button("Sauvegarder");
+        setButtonStyle(saveBut, "rond");
+
+        Supplier<String[]> sauvegardeProfilSupplier = () -> new String[] {nomField.getText(), prenomField.getText(), emailField.getText(), numTelField.getText()};
+        saveBut.setOnAction(control.generateEventHandlerAction("sauvegarde-profil", sauvegardeProfilSupplier));
+
+        Button achievementBut = new Button("Trophées");
+        setButtonStyle(achievementBut, "rond");
+        hboxBotButtons.getChildren().addAll(saveBut, achievementBut);
+
+        vboxProfilUtilisatuer.getChildren().addAll(hboxNom, hboxPrenom, hboxEmail, hboxNumTel);
+        vboxCentral.getChildren().addAll(veloActuel, vboxProfilUtilisatuer);
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
+        
         bp.setTop(hboxTitreRetour);
+        bp.setCenter(vboxCentral);
+        bp.setBottom(hboxBotButtons);
         actualParent.getChildren().addAll(bp);
         stage.setResizable(false);
         scene = new Scene(actualParent, 1200, 700);
@@ -517,6 +590,25 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
     }
 
+    public void showMeriteView(){
+        //parent
+        actualParent = new VBox();
+        actualParent.setStyle("-fx-background-color: #ffffff");
+        BorderPane bp = new BorderPane();
+        
+
+
+
+
+
+
+
+        actualParent.getChildren().addAll(bp);
+        stage.setResizable(false);
+        scene = new Scene(actualParent, 1200, 700);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
 
     public void showVeloCategory(ArrayList<String> listePrixTypeVelos){
 
@@ -1104,9 +1196,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         alert.showAndWait();
     }
 
+
     public void setLabelStyle(Label l){
         l.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; ");
     }
+
 
     public String setDispoText(Boolean bool){
         if(bool){
@@ -1116,6 +1210,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             return "Indisponible";
         }
     }
+
+    
     public void setLabelColor(Label l){
         if(l.getText().equals("Disponible")){
             l.setStyle("-fx-text-fill: green");

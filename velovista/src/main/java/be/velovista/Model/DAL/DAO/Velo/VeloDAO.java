@@ -91,7 +91,7 @@ public class VeloDAO implements IVeloDAO{
     }
 
     public ArrayList<Velo> getListeVeloClass(){
-        String sqlString = "select * from velo where typevelo = 'Classique'";
+        String sqlString = "select * from velo where typevelo = 'Classique' ORDER BY idvelo ASC";
         ArrayList<Velo> result = new ArrayList<>();
         VeloClassique vc;
 
@@ -110,7 +110,7 @@ public class VeloDAO implements IVeloDAO{
     }
 
     public ArrayList<Velo> getListeVeloElec(){
-        String sqlString = "select * from velo where typevelo = 'Electrique'";
+        String sqlString = "select * from velo where typevelo = 'Electrique' ORDER BY idvelo ASC";
         ArrayList<Velo> result = new ArrayList<>();
         VeloElectrique vc;
 
@@ -129,7 +129,7 @@ public class VeloDAO implements IVeloDAO{
     }
 
     public ArrayList<Velo> getListeVeloEnfant(){
-        String sqlString = "select * from velo where typevelo = 'Enfant'";
+        String sqlString = "select * from velo where typevelo = 'Enfant' ORDER BY idvelo ASC";
         ArrayList<Velo> result = new ArrayList<>();
         VeloEnfant vc;
 

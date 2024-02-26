@@ -8,4 +8,5 @@ public interface ILocationDAO {
     public Location getLocationByEmail(String email);
     public int insertLocation(int idAbonnementUtilisatuer, double prixTotal, LocalDate dateDebut, LocalDate dateFin);
     public int checkCurrentLocation(LocalDate dateDebut, LocalDate dateFin);
+    public LocalDate getDateDebutCurrentLocation(int idUser);
 }

@@ -2,15 +2,16 @@ package be.velovista.Model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.BL.Accessoire;
-import be.velovista.Model.BL.ClasseConteneur;
+import be.velovista.Model.BL.User;
 import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
 import be.velovista.Model.DAL.DAO.Abonnement.AbonnementDAO;
@@ -58,16 +59,60 @@ public class PrimaryModel implements IModel {
 
     //Profile methods
 
+    //Combine 2 ArrayList dans une autre ArrayList
+    //Utilisé dans la page profil. Affiche la page via firepropertychange
     public void getInfoProfilePage(){
+        ArrayList<ArrayList<String>> comboList = new ArrayList<>();
+        ArrayList<String> listeInfoVeloActuel = this.listeStringVeloActuel();
+        ArrayList<String> listeInfoUserActuel = this.listeStringUser();
 
-        
-        // ClasseConteneur classcon = new ClasseConteneur(null, this.userConnected);
+        comboList.add(listeInfoVeloActuel);
+        comboList.add(listeInfoUserActuel);
 
-        // this.ilocationdao.getLocationByEmail(this.userConnected.getUser().geteMail());
+        support.firePropertyChange("show-page-profil", "", comboList);
+    }
 
-        // support.firePropertyChange("retour-info-profile", "", classcon);
+    //Ajoute chaque field du Users dans une ArrayList de String
+    //Utilisé pour la page profil
+    public ArrayList<String> listeStringUser(){
+        ArrayList<String> listeInfoUserActuel = new ArrayList<>();
+        User u = this.iuserdao.getUser(this.userConnected.getUser().geteMail());
+        listeInfoUserActuel.add(Integer.toString(u.getIdUser()));
+        listeInfoUserActuel.add(u.getNom());
+        listeInfoUserActuel.add(u.getPrenom());
+        listeInfoUserActuel.add(u.geteMail());
+        listeInfoUserActuel.add(u.getNumTelephone());
+        listeInfoUserActuel.add(Integer.toString(u.getTotalKM()));
 
+        return listeInfoUserActuel;
+    }
 
+    //Ajoute chaque field du vélo en location actuel de l'utilisateur connecté dans une ArrayList de String
+    //Utilisé pour la page profil
+    public ArrayList<String> listeStringVeloActuel(){
+        ArrayList<String> listeInfoVeloActuel = new ArrayList<>();
+        int idVelo = this.iabouser.getIdVeloFromIdUser(this.userConnected.getUser().getIdUser());
+        Velo v = this.ivelodao.getVelo(idVelo);
+        if(v != null){
+        listeInfoVeloActuel.add(Integer.toString(v.getIdVelo()));
+        listeInfoVeloActuel.add(v.getNumeroSerie());
+        listeInfoVeloActuel.add(v.getModele());
+        listeInfoVeloActuel.add(v.getType());
+        listeInfoVeloActuel.add(Boolean.toString(v.isDisponible()));
+        listeInfoVeloActuel.add(v.getCouleur());
+        listeInfoVeloActuel.add(Integer.toString(v.getTaille()));
+        listeInfoVeloActuel.add(Integer.toString(v.getAge()));
+        listeInfoVeloActuel.add(Double.toString(v.getPrix()));
+        listeInfoVeloActuel.add(v.getPhoto());
+        }
+        return listeInfoVeloActuel;
+    }
+
+    public void sauvegardeProfil(String nouveauNomUser, String nouveauPrenomUser, String nouveauEmailUser, String nouveauNumTelUser){
+        if(!nouveauNomUser.equals("")){
+            this.userConnected.getUser().setNom(nouveauNomUser);
+            this.support.firePropertyChange("test", "", nouveauNomUser);
+        }
     }
 
     //User methods
@@ -426,8 +471,19 @@ public class PrimaryModel implements IModel {
         this.ivelodao.updateVeloToIndispo(idVelo);
     }
 
-    public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin){
-        int exists = ilocationdao.checkCurrentLocation(dateDebut, dateFin);
+    // public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin){
+    //     int exists = ilocationdao.checkCurrentLocation(dateDebut, dateFin);
+
+    //     if(exists > 0){
+    //         return true;
+    //     }
+    //     else{
+    //         return false;
+    //     }
+    // }
+    //check si une location est déjà actif pour la dernière étape de la réservation
+    public boolean checkAboUserExists(){
+        int exists = iabouser.checkCurrentAboUser(this.userConnected.getUser().getIdUser());
 
         if(exists > 0){
             return true;
@@ -436,4 +492,50 @@ public class PrimaryModel implements IModel {
             return false;
         }
     }
+
+    //Methode qui s'active quand on rend le vélo
+    public boolean updateVeloActuelStatus(int intIdVelo){
+        this.updateTotalKMUser();
+        this.updateVeloToDispo(intIdVelo);
+        this.updateAbonnementUserToInactif();
+
+        return true;
+    }
+
+    //Met l'abonnementUser en statut Inactif quand le vélo a été rendu
+    public void updateAbonnementUserToInactif(){
+        this.iabouser.updateAbonnementUtilisateurInactif(this.userConnected.getUser().getIdUser());
+    }
+
+    //Ajoute les KM au CurrentUser et met a jour la DB avec le total des KM parcouru
+    public void updateTotalKMUser(){
+        int randomKM = this.generateRandomKM();
+        int currentKMUser = this.userConnected.getUser().getTotalKM();
+        int newKMUser = currentKMUser + randomKM;
+
+        this.iuserdao.updateTotalKMUser(newKMUser, this.userConnected.getUser().getIdUser());
+    }
+    //Genere un nombre de KM random pour chaque jour que le vélo a été loué. Par jour de 0 a 30km est généré
+    public int generateRandomKM(){
+        int nbJours = this.calculNbJoursLocation();
+        int kmTotalGenere = 0;
+        Random random = new Random();
+        for (int i = 0; i < nbJours; i++){
+            int randKM = random.nextInt(31);
+            kmTotalGenere += randKM;
+        }
+        return kmTotalGenere;
+    }
+
+    //calcul le nombre de jours de la location pour generer un random km réaliste par jour
+    public int calculNbJoursLocation(){
+        int nombreJours = 0;
+        
+        LocalDate dateAuj = LocalDate.now();
+        LocalDate dateDebutLoc = this.ilocationdao.getDateDebutCurrentLocation(this.userConnected.getUser().getIdUser());
+        nombreJours = (int) ChronoUnit.DAYS.between(dateDebutLoc, dateAuj);
+
+        return nombreJours;
+    }
+
 }

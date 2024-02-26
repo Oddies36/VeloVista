@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import be.velovista.Model.DAL.DBConnection;
 
@@ -25,7 +26,7 @@ public class AbonnementUtilisateurDAO implements IAbonnementUtilisateurDAO {
     }
 
     public int insertAbonnementUtilisateur(int idAbo, int idVelo, int idUser, double prixAbo){
-        String sqlString = "INSERT INTO abonnementutilisateur (id_abonnement, id_velo, id_utilisateur, coutabonnement) VALUES (?, ?, ?, ?) RETURNING id_abonnement_utilisateur;";
+        String sqlString = "INSERT INTO abonnementutilisateur (id_abonnement, id_velo, id_utilisateur, coutabonnement, isactif) VALUES (?, ?, ?, ?, true) RETURNING id_abonnement_utilisateur;";
         int idAbonnementUtilisateur = -1;
 
         try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
@@ -46,6 +47,59 @@ public class AbonnementUtilisateurDAO implements IAbonnementUtilisateurDAO {
             System.out.println(e.getMessage());
         }
         return idAbonnementUtilisateur;
+    }
+
+    public int getIdVeloFromIdUser(int idUser){
+        String sqlString ="SELECT id_velo FROM abonnementutilisateur where isactif = true AND id_utilisateur = ?";
+        int idVelo = -1;
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+            pstat.setInt(1, idUser);
+            try(ResultSet rset = pstat.executeQuery()){
+                if(rset.next()){
+                    idVelo = rset.getInt(1);
+                }
+            }
+            catch(SQLException e){
+                System.out.println(e.getMessage());
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return idVelo;
+    }
+
+    public int checkCurrentAboUser(int idUser){
+        int count = -1;
+        String sqlString = "SELECT count(id_abonnement_utilisateur) FROM abonnementutilisateur WHERE id_utilisateur = ? AND isactif = true;";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+        pstat.setInt(1, idUser);
+        try(ResultSet rset = pstat.executeQuery()){
+            if(rset.next()){
+            count = rset.getInt(1);
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        }
+        catch(SQLException e){
+        System.out.println(e.getMessage());
+        }
+        return count;
+    }
+
+    public void updateAbonnementUtilisateurInactif(int idUser){
+        String sqlString = "UPDATE abonnementutilisateur SET isactif = false WHERE id_utilisateur = ?";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+            pstat.setInt(1, idUser);
+            pstat.executeUpdate();
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 }

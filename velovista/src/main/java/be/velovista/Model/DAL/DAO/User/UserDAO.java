@@ -27,13 +27,13 @@ public class UserDAO implements IUserDAO{
 
     public User getUser(String email){
         User u = null;
-        String sqlString = "SELECT iduser, nom, prenom, email, numtelephone FROM Utilisateur WHERE email = ?";
+        String sqlString = "SELECT iduser, nom, prenom, email, numtelephone, totalkm FROM Utilisateur WHERE email = ?";
 
         try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
             pstat.setString(1, email);
             try(ResultSet rset = pstat.executeQuery()){
                 while(rset.next()){
-                    u = new User(rset.getInt(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5));
+                    u = new User(rset.getInt(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5), rset.getInt(6));
                 }
             }
             catch(SQLException e){
@@ -94,7 +94,7 @@ public class UserDAO implements IUserDAO{
     }
 
     public void createUserAccount(String nom, String prenom, String Email, String numTel, String hashedPassword){
-        String sqlString = "INSERT INTO utilisateur (nom, prenom, email, motdepasse, numtelephone) VALUES (?, ?, ?, ?, ?)";
+        String sqlString = "INSERT INTO utilisateur (nom, prenom, email, motdepasse, numtelephone, totalkm) VALUES (?, ?, ?, ?, ?, 0)";
 
         try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
             pstat.setString(1, nom);
@@ -121,4 +121,19 @@ public class UserDAO implements IUserDAO{
             System.out.println(e.getMessage());
         }
     }
+
+    public void updateTotalKMUser(int newKmUser, int idUser){
+        String sqlString = "UPDATE utilisateur SET totalkm = ? WHERE iduser = ?";
+
+        try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+            pstat.setInt(1, newKmUser);
+            pstat.setInt(2, idUser);
+            pstat.executeUpdate();
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //add update user from profile
 }
