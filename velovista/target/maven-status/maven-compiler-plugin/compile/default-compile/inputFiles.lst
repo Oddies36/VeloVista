@@ -11,6 +11,7 @@ c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\module-info.jav
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\Accessoire.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\Velo.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Merite_utilisateur\IMerite_utilisateurDAO.java
+c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\Reservation.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Controller\Controller.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\VeloEnfant.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Merite_utilisateur\Merite_utilisateurDAO.java
@@ -18,11 +19,14 @@ c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Mo
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\IModel.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\UserConnected.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\User.java
+c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DBCreation.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Abonnement\IAbonnementDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\Abonnement.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Merites\IMeritesDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Accessoire\IAccessoireDAO.java
+c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Reservation\ReservationDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\User\IUserDAO.java
+c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DBTableInitializer.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Abonnement\AbonnementDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Accessoire_Location\Accessoire_LocationDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Velo\VeloDAO.java
@@ -35,4 +39,5 @@ c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Mo
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\View\IView.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\AbonnementUtilisateur\AbonnementUtilisateurDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\BL\Location.java
+c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\Model\DAL\DAO\Reservation\IReservationDAO.java
 c:\Users\maxim\Desktop\GitVelo\VeloVista\velovista\src\main\java\be\velovista\View\PrimaryView.java

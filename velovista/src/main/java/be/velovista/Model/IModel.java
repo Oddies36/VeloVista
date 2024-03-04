@@ -26,12 +26,14 @@ public interface IModel {
     public Velo getVeloChoixUtilisateur(int id);
     public void getListeAbo();
     public ArrayList<Accessoire> getAccessoires();
+    public void getAccessoiresString(String idVelo, String dateDebut, String dateFin, String choixAbonnement);
     public ArrayList<Abonnement> getListeChoixAbo();
     public LocalDate calculDateFin(LocalDate dateDebut, String nomAbonnement);
     public double calculPrixAbonnement(Velo v, String nomAbonnement);
     public double calculPrixAbonnementParType(Velo v, String nomAbonnement);
     public double calculPrixTotalAccessoires(ArrayList<String> listeIdAccessoires);
     public ArrayList<Double> calculPrixTotalLocation(Velo v, String nomAbonnement, ArrayList<String> listeAccessoires);
+    public void calculPrixTotalLocationReservation(String infoVeloDates, String listeChoixIdAccessoires);
     public int createAbonnement(Velo v, String nomAbo, double prixAbo);
     public int createLocation(int idAbonnementUtilisateur, double prixTotal, LocalDate dateDebut, LocalDate dateFin);
     public void getInfoProfilePage();
@@ -43,5 +45,16 @@ public interface IModel {
     public boolean checkAboUserExists();
     public void updateAbonnementUserToInactif();
     public boolean updateVeloActuelStatus(int intIdVelo);
-
+    public void fustionneListeMerites();
+    public boolean checkDisponibilitesReservation(int idVelo, String dateDebut, String dateFin);
+    public void insertReservation(String idVelo, String dateDebut, String dateFin, String choixAboUserString);
+    public void getReservations();
+    public String getNomsAccessoires(String choixIdAccessoires);
+    public void createAboLocation(String listeNomsAccessoires, String listeInfoEtDates, String listePrix, String listeInfoVelo);
+    public void showPageHistorique();
+    public void checkDataExistsVelo();
+    public void checkDataExistsMerite();
+    public void checkDataExistsAbonnement();
+    public void checkDataExistsAccessoire();
+    public void annulerReservation(String idReservation);
 }

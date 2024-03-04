@@ -21,6 +21,9 @@ public class DBProperties {
     public String getUrl(){
         return properties.getProperty("database.url");
     }
+    public String getDefaultUrl(){
+        return properties.getProperty("database.defaultUrl");
+    }
     public String getUsername(){
         return properties.getProperty("database.username");
     }

@@ -16,4 +16,8 @@ public interface IVeloDAO {
     public Velo getVelo(int id);
     public void updateVeloToDispo(int idVelo);
     public void updateVeloToIndispo(int idVelo);
+    public int checkDonneesExiste();
+    public void insertDonneesClassique();
+    public void insertDonneesElectrique();
+    public void insertDonneesEnfant();
 }

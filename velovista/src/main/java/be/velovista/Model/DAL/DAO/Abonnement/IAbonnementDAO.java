@@ -9,4 +9,6 @@ public interface IAbonnementDAO {
   public ArrayList<String> getAbonnements();
   public ArrayList<Abonnement> getListeAbonnements();
   public int getAbonnementId(String nomAbo);
+  public int checkDonneesExiste();
+  public void insertDonneesAbonnement();
 }

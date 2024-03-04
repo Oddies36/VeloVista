@@ -2,13 +2,6 @@ package be.velovista.Model.BL;
 
 public class Accessoire {
 
-    // public enum NomAccessoires{
-    //     Casque,
-    //     Cadenas,
-    //     PorteBadge,
-    //     chaiseEnfant
-    // }
-
     private int idAccessoires;
     private String nomAccessoire;
     private double prixAccessoire;
@@ -18,6 +11,7 @@ public class Accessoire {
     public int getIdAccessoires(){
         return this.idAccessoires;
     }
+    
     public void setIdAccessoires(int idAccessoire){
         this.idAccessoires = idAccessoire;
     }

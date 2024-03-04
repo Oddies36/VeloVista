@@ -3,6 +3,7 @@ be\velovista\Model\BL\VeloEnfant.class
 be\velovista\Model\DAL\DAO\Merite_utilisateur\IMerite_utilisateurDAO.class
 be\velovista\Controller\Controller$2.class
 be\velovista\App.class
+be\velovista\Model\DAL\DBCreation.class
 be\velovista\Model\DAL\DAO\Accessoire\AccessoireDAO.class
 be\velovista\Model\DAL\DAO\Abonnement\IAbonnementDAO.class
 be\velovista\Model\DAL\DAO\AbonnementUtilisateur\AbonnementUtilisateurDAO.class
@@ -24,6 +25,7 @@ be\velovista\Model\BL\ClasseConteneur.class
 be\velovista\Model\DAL\DAO\Merites\MeritesDAO.class
 be\velovista\Model\DAL\DAO\Merite_utilisateur\Merite_utilisateurDAO.class
 be\velovista\Model\DAL\DAO\Merites\IMeritesDAO.class
+be\velovista\Model\DAL\DBTableInitializer.class
 be\velovista\Model\DAL\DAO\Velo\IVeloDAO.class
 be\velovista\Model\DAL\DAO\Accessoire_Location\IAccessoire_LocationDAO.class
 be\velovista\Model\PrimaryModel.class
@@ -36,5 +38,8 @@ be\velovista\Model\DAL\DAO\Velo\VeloDAO.class
 be\velovista\View\PrimaryView.class
 be\velovista\Controller\Controller$1.class
 be\velovista\Model\BL\VeloClassique.class
+be\velovista\Model\BL\Reservation.class
 be\velovista\Model\DAL\DAO\AbonnementUtilisateur\IAbonnementUtilisateurDAO.class
+be\velovista\Model\DAL\DAO\Reservation\ReservationDAO.class
 be\velovista\View\IView.class
+be\velovista\Model\DAL\DAO\Reservation\IReservationDAO.class

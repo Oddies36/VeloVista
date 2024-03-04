@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import be.velovista.Model.BL.Abonnement;
 import be.velovista.Model.BL.Accessoire;
+import be.velovista.Model.BL.Merites;
+import be.velovista.Model.BL.Reservation;
 import be.velovista.Model.BL.User;
 import be.velovista.Model.BL.UserConnected;
 import be.velovista.Model.BL.Velo;
@@ -24,6 +26,12 @@ import be.velovista.Model.DAL.DAO.Accessoire_Location.Accessoire_LocationDAO;
 import be.velovista.Model.DAL.DAO.Accessoire_Location.IAccessoire_LocationDAO;
 import be.velovista.Model.DAL.DAO.Location.ILocationDAO;
 import be.velovista.Model.DAL.DAO.Location.LocationDAO;
+import be.velovista.Model.DAL.DAO.Merite_utilisateur.IMerite_utilisateurDAO;
+import be.velovista.Model.DAL.DAO.Merite_utilisateur.Merite_utilisateurDAO;
+import be.velovista.Model.DAL.DAO.Merites.IMeritesDAO;
+import be.velovista.Model.DAL.DAO.Merites.MeritesDAO;
+import be.velovista.Model.DAL.DAO.Reservation.IReservationDAO;
+import be.velovista.Model.DAL.DAO.Reservation.ReservationDAO;
 import be.velovista.Model.DAL.DAO.User.IUserDAO;
 import be.velovista.Model.DAL.DAO.User.UserDAO;
 import be.velovista.Model.DAL.DAO.Velo.IVeloDAO;
@@ -41,6 +49,9 @@ public class PrimaryModel implements IModel {
       private UserConnected userConnected = new UserConnected();
       private IAbonnementUtilisateurDAO iabouser = new AbonnementUtilisateurDAO();
       private IAccessoire_LocationDAO iacclocdao = new Accessoire_LocationDAO();
+      private IMerite_utilisateurDAO imeriteuserdao = new Merite_utilisateurDAO();
+      private IReservationDAO iresdao = new ReservationDAO();
+      private IMeritesDAO imeritedao = new MeritesDAO();
       Alert alert;
 
 
@@ -56,9 +67,9 @@ public class PrimaryModel implements IModel {
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
     }
-
-    //Profile methods
-
+    ///////////////////////
+    ////Profile methods////
+    ///////////////////////
     //Combine 2 ArrayList dans une autre ArrayList
     //Utilisé dans la page profil. Affiche la page via firepropertychange
     public void getInfoProfilePage(){
@@ -109,13 +120,69 @@ public class PrimaryModel implements IModel {
     }
 
     public void sauvegardeProfil(String nouveauNomUser, String nouveauPrenomUser, String nouveauEmailUser, String nouveauNumTelUser){
-        if(!nouveauNomUser.equals("")){
-            this.userConnected.getUser().setNom(nouveauNomUser);
-            this.support.firePropertyChange("test", "", nouveauNomUser);
+        if(!nouveauNomUser.isEmpty()){
+            if(checkNomUpdate(nouveauNomUser)){
+                this.userConnected.getUser().setNom(nouveauNomUser);
+                this.iuserdao.updateNomUser(this.userConnected.getUser().getIdUser(), nouveauNomUser);
+                this.getInfoProfilePage();
+            }
+            else{
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Nom invalide");
+                alert.setContentText("Nom invalide");
+                alert.showAndWait();
+            }
+        }
+
+        if(!nouveauPrenomUser.isEmpty()){
+            if(checkNomUpdate(nouveauPrenomUser)){
+                this.userConnected.getUser().setPrenom(nouveauPrenomUser);
+                this.iuserdao.updatePrenomUser(this.userConnected.getUser().getIdUser(), nouveauPrenomUser);
+                this.getInfoProfilePage();
+            }
+            else{
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Prénom invalide");
+                alert.setContentText("Prénom invalide");
+                alert.showAndWait();
+            }
+        }
+
+        if(!nouveauEmailUser.isEmpty()){
+            if(checkEmail(nouveauEmailUser)){
+                this.userConnected.getUser().seteMail(nouveauEmailUser);;
+                this.iuserdao.updateEmailUser(this.userConnected.getUser().getIdUser(), nouveauEmailUser);
+                this.getInfoProfilePage();
+            }
+        }
+
+        if(!nouveauNumTelUser.isEmpty()){
+            if(checkNumTel(nouveauNumTelUser)){
+                this.userConnected.getUser().setNumTelephone(nouveauNumTelUser);
+                this.iuserdao.updateNumTelUser(this.userConnected.getUser().getIdUser(), nouveauNumTelUser);
+                this.getInfoProfilePage();
+            }
         }
     }
+    ////////////////////
+    ////User methods////
+    ////////////////////
 
-    //User methods
+    public boolean checkNomUpdate(String nom){
+        if(nom != null && !nom.isEmpty() && Character.isUpperCase(nom.charAt(0)) && nom.matches("[A-Za-z'-]+")){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkNumTel(String numTel){
+        if(numTel != null && !numTel.isEmpty() && numTel.matches("^\\+?\\d+$")){
+            return true;
+        }
+        return false;
+    }
 
     public boolean passwordMatch(String email, String password){
         String hashedPassword = hashPassword(password);
@@ -265,10 +332,9 @@ public class PrimaryModel implements IModel {
         }
         return false;
     }
-
-    //Methodes Velos
-
-
+    //////////////////////
+    ////Methodes Velos////
+    //////////////////////
     public void getPrixVelos(){
         ArrayList<String> listePrixTypeVelos = new ArrayList<>();
 
@@ -331,7 +397,19 @@ public class PrimaryModel implements IModel {
     //Methodes abonnements
 
     public void getListeAbo(){
-        support.firePropertyChange("resultat-nom-liste-abonnements", "", this.iabonnementdao.getListeAbonnements());
+        ArrayList<Abonnement> listeAbo = new ArrayList<>();
+        String listeNomAbo = "";
+
+        listeAbo = this.iabonnementdao.getListeAbonnements();
+
+        for(Abonnement a : listeAbo){
+            listeNomAbo += a.getNomAbonnement()+","+
+            a.getDescriptionAbonnement()+";";
+        }
+        listeNomAbo = listeNomAbo.substring(0, listeNomAbo.length() -1);
+
+
+        support.firePropertyChange("resultat-nom-liste-abonnements", "", listeNomAbo);
     }
 
     public ArrayList<Abonnement> getListeChoixAbo(){
@@ -344,7 +422,48 @@ public class PrimaryModel implements IModel {
         return iaccessoiredao.getAccessoires();
     }
 
+    public String getNomsAccessoires(String choixIdAccessoires){
+        String[] arrayListeAccessoires = choixIdAccessoires.split(",");
+        String listeNomsAccessoiresString = "";
 
+        if(arrayListeAccessoires.length > 0 && !arrayListeAccessoires[0].equals("")){
+            for(String s : arrayListeAccessoires){
+                Accessoire a = this.iaccessoiredao.getAccessoireFromId(s);
+                listeNomsAccessoiresString += a.getNomAccessoire()+",";
+            }
+            listeNomsAccessoiresString = listeNomsAccessoiresString.substring(0, listeNomsAccessoiresString.length() -1);
+        }
+        return listeNomsAccessoiresString;
+    }
+
+    public void getAccessoiresString(String idVelo, String dateDebut, String dateFin, String choixAbonnement){
+        ArrayList<Accessoire> listeAccessoires = this.iaccessoiredao.getAccessoires();
+        ArrayList<String> comboListeAccInfoPrecedent = new ArrayList<>();
+        String listeAccessoiresString = "";
+        String infoPrecedent = idVelo+","+dateDebut+","+dateFin+","+choixAbonnement;
+        
+
+        for(Accessoire a : listeAccessoires){
+            listeAccessoiresString += Integer.toString(a.getIdAccessoires())+","+
+            a.getNomAccessoire()+","+
+            a.getDescriptionAccessoire()+","+
+            Double.toString(a.getPrixAccessoire())+","+
+            a.getPhotoAccessoire()+","+
+            idVelo+","+
+            dateDebut+","+
+            dateFin+";";
+        }
+        if(listeAccessoires.size() > 0){
+            listeAccessoiresString = listeAccessoiresString.substring(0, listeAccessoiresString.length() -1);
+        }
+        
+        comboListeAccInfoPrecedent.add(listeAccessoiresString);
+        comboListeAccInfoPrecedent.add(infoPrecedent);
+
+        support.firePropertyChange("retourne-info-accessoires-reservation", "", comboListeAccInfoPrecedent);
+    }
+
+    //*****Méthode à tester*****
     public LocalDate calculDateFin(LocalDate dateDebut, String nomAbonnement){
         LocalDate dateFin = null;
         switch(nomAbonnement){
@@ -371,6 +490,8 @@ public class PrimaryModel implements IModel {
         }
         return dateFin;
     }
+
+    //*****Méthode à tester*****
     public double calculPrixAbonnement(Velo v, String nomAbonnement){
         double prixAbonnement = 0.00;
 
@@ -398,6 +519,8 @@ public class PrimaryModel implements IModel {
             }
         return prixAbonnement;
     }
+
+    //*****Méthode à tester*****
     public double calculPrixAbonnementParType(Velo v, String nomAbonnement){
         String typeVelo = v.getType();
         double prixAbonnementBase = this.calculPrixAbonnement(v, nomAbonnement);
@@ -425,6 +548,7 @@ public class PrimaryModel implements IModel {
         return prixAbonnementApresCalcul;
     }
 
+    //*****Méthode à tester*****
     public double calculPrixTotalAccessoires(ArrayList<String> listeIdAccessoires){
         double prixTotal = 0.00;
         ArrayList<Accessoire> listeAccessoiresChoisis = new ArrayList<>();
@@ -438,6 +562,7 @@ public class PrimaryModel implements IModel {
         return prixTotal;
     }
 
+    //*****Méthode à tester*****
     public ArrayList<Double> calculPrixTotalLocation(Velo v, String nomAbonnement, ArrayList<String> listeAccessoires){
         ArrayList<Double> listePrix = new ArrayList<>();
         double prixAbonnement = this.calculPrixAbonnementParType(v, nomAbonnement);
@@ -448,6 +573,55 @@ public class PrimaryModel implements IModel {
         listePrix.add(prixAbonnement + prixAccessoires);
 
         return listePrix;
+    }
+    //Calcul les prix après la réservation pour afficher le récap après réservation
+    public void calculPrixTotalLocationReservation(String infoVeloDates, String listeChoixIdAccessoires){
+        String[] listeInfoVeloDates = infoVeloDates.split(",");
+        String nomAbo = listeInfoVeloDates[3];
+        String[] arrayListeAccessoires = listeChoixIdAccessoires.split(",");
+        ArrayList<String> listeAccessoires = new ArrayList<>();
+        String listePrixString = "";
+        String infoVeloString = "";
+        double prixAccessoires = 0.00;
+
+        //Info final a donner dans supplier
+        ArrayList<String> listePrixEtInfoPrecedent = new ArrayList<>();
+
+        //A mettre dans arraylist
+        String listeNomsAccessoires = this.getNomsAccessoires(listeChoixIdAccessoires);
+
+
+        for(String s : arrayListeAccessoires){
+            listeAccessoires.add(s);
+        }
+        Velo v = this.ivelodao.getVelo(Integer.parseInt(listeInfoVeloDates[0]));
+        double prixAbonnement = this.calculPrixAbonnementParType(v, nomAbo);
+        if(listeAccessoires.size() > 0 && !listeAccessoires.get(0).equals("")){
+            prixAccessoires = this.calculPrixTotalAccessoires(listeAccessoires);
+        }
+        
+        double prixTotal = prixAbonnement+prixAccessoires;
+
+        
+        listePrixString += Double.toString(prixAbonnement)+","+
+        Double.toString(prixAccessoires)+","+
+        Double.toString(prixTotal);
+
+        infoVeloString += Integer.toString(v.getIdVelo())+","+
+        v.getNumeroSerie()+","+
+        v.getModele()+","+
+        v.getType()+","+
+        v.getCouleur()+","+
+        Integer.toString(v.getTaille())+","+
+        Integer.toString(v.getAge())+","+
+        v.getPhoto();
+
+        listePrixEtInfoPrecedent.add(listeNomsAccessoires);
+        listePrixEtInfoPrecedent.add(infoVeloDates);
+        listePrixEtInfoPrecedent.add(listePrixString);
+        listePrixEtInfoPrecedent.add(infoVeloString);
+
+        support.firePropertyChange("retour-recap-reservation", "", listePrixEtInfoPrecedent);
     }
 
     public int createAbonnement(Velo v, String nomAbo, double prixAbo){
@@ -471,16 +645,6 @@ public class PrimaryModel implements IModel {
         this.ivelodao.updateVeloToIndispo(idVelo);
     }
 
-    // public boolean checkLocationExists(LocalDate dateDebut, LocalDate dateFin){
-    //     int exists = ilocationdao.checkCurrentLocation(dateDebut, dateFin);
-
-    //     if(exists > 0){
-    //         return true;
-    //     }
-    //     else{
-    //         return false;
-    //     }
-    // }
     //check si une location est déjà actif pour la dernière étape de la réservation
     public boolean checkAboUserExists(){
         int exists = iabouser.checkCurrentAboUser(this.userConnected.getUser().getIdUser());
@@ -507,19 +671,22 @@ public class PrimaryModel implements IModel {
         this.iabouser.updateAbonnementUtilisateurInactif(this.userConnected.getUser().getIdUser());
     }
 
-    //Ajoute les KM au CurrentUser et met a jour la DB avec le total des KM parcouru
+    //Ajoute les KM au CurrentUser et met a jour la DB avec le total des KM parcouru. Appelle ensuite la partie check de Mérites
     public void updateTotalKMUser(){
         int randomKM = this.generateRandomKM();
         int currentKMUser = this.userConnected.getUser().getTotalKM();
         int newKMUser = currentKMUser + randomKM;
+        this.userConnected.getUser().setTotalKM(newKMUser);
 
         this.iuserdao.updateTotalKMUser(newKMUser, this.userConnected.getUser().getIdUser());
+        updateMerites(this.meritesObtenus());
+        updatePointsBonus(calculPointsBonus(randomKM));
     }
     //Genere un nombre de KM random pour chaque jour que le vélo a été loué. Par jour de 0 a 30km est généré
     public int generateRandomKM(){
-        int nbJours = this.calculNbJoursLocation();
-        int kmTotalGenere = 0;
         Random random = new Random();
+        int nbJours = this.calculNbJoursLocation();
+        int kmTotalGenere = random.nextInt(21);
         for (int i = 0; i < nbJours; i++){
             int randKM = random.nextInt(31);
             kmTotalGenere += randKM;
@@ -538,4 +705,261 @@ public class PrimaryModel implements IModel {
         return nombreJours;
     }
 
+
+    ////////////////////
+    //Methodes Merites//
+    ////////////////////
+
+    //Converty chaque Merite Obtenu en 1 seul string
+    public String getMeritesObtenuString(){
+        ArrayList<Merites> listeMeritesObtenu = this.imeriteuserdao.getListeMeritesObtenu(this.userConnected.getUser().getIdUser());
+        String listeMeritesObtenuString = "";
+
+        for (Merites m : listeMeritesObtenu){
+            listeMeritesObtenuString += Integer.toString(m.getIdMerite())+","+
+            m.getNomMerite()+","+
+            m.getDescriptionMerite()+","+
+            Integer.toString(m.getCritere())+","+
+            m.getDateObtenu().toString()+";";
+        }
+        if(listeMeritesObtenu.size() > 0){
+            listeMeritesObtenuString = listeMeritesObtenuString.substring(0, listeMeritesObtenuString.length() -1);
+        }
+        
+
+        return listeMeritesObtenuString;
+    }
+
+    //Converti change Merite Non Obtenu en 1 seul String
+    public String getMeritesNonObtenuString(){
+        ArrayList<Merites> listeMeritesNonObtenu = this.imeriteuserdao.getListeMeritesNonObtenu(this.userConnected.getUser().getIdUser());
+        String listeMeritesNonObtenuString = "";
+
+        for (Merites m : listeMeritesNonObtenu){
+            listeMeritesNonObtenuString += Integer.toString(m.getIdMerite())+","+
+            m.getNomMerite()+","+
+            m.getDescriptionMerite()+","+
+            Integer.toString(m.getCritere())+";";
+        }
+        if(listeMeritesNonObtenu.size() > 0){
+            listeMeritesNonObtenuString = listeMeritesNonObtenuString.substring(0, listeMeritesNonObtenuString.length() -1);
+        }
+        return listeMeritesNonObtenuString;
+    }
+
+    //Combine les 2 listes de mérites ensemble et lance un FirePropertyChange avec cette liste. Affiche la view Merites
+    public void fustionneListeMerites(){
+        ArrayList<String> listeMeritesObtNonObt = new ArrayList<>();
+        String listeObt = this.getMeritesObtenuString();
+        String listeNonObt = this.getMeritesNonObtenuString();
+        String kmRestantsProchainMerite = Integer.toString(this.calculNbKmRestants());
+        String nombrePointsBonus = Double.toString(this.iuserdao.getPointsBonus(this.userConnected.getUser().getIdUser()));
+
+        listeMeritesObtNonObt.add(listeObt);
+        listeMeritesObtNonObt.add(listeNonObt);
+        listeMeritesObtNonObt.add(kmRestantsProchainMerite);
+        listeMeritesObtNonObt.add(nombrePointsBonus);
+
+        support.firePropertyChange("retourne-liste-merite", "", listeMeritesObtNonObt);
+
+    }
+
+    //Retourne le level du dernier Merite obtenu. Si c'est null, ça retourne 0
+    public int checkDernierMeriteObtenu(){
+        return this.imeriteuserdao.getDernierMeriteObtenu(this.userConnected.getUser().getIdUser());
+    }
+
+    //Retourne le critère du prochain palier de l'utilisateur
+    public int getCritereProchainPalier(){
+        int levelActuel = this.checkDernierMeriteObtenu();
+        return this.imeriteuserdao.getCritereProchainPalier(levelActuel);
+    }
+
+    //*****Méthode à tester*****
+    //Calcul le nombre de KM restants pour atteindre le prochain pallier
+    public int calculNbKmRestants(){
+        int totalKMUser = this.userConnected.getUser().getTotalKM();
+        int critereProchainMerite = this.getCritereProchainPalier();
+
+        return critereProchainMerite - totalKMUser;
+    }
+
+    //*****Méthode à tester*****
+    //Check le dernier level reçu et en fonction de la liste des criteres et le total des km du user, vérifie les levels pas encore reçu
+    public ArrayList<Integer> meritesObtenus(){
+        int lvlDernierObtenu = this.checkDernierMeriteObtenu();
+        int totalKMUser = this.userConnected.getUser().getTotalKM();
+        ArrayList<Integer> listeLevelsObetenu = new ArrayList<>();
+        ArrayList<Integer> listeCriteres = this.imeriteuserdao.getListeCriteres();
+
+        for(int i = lvlDernierObtenu; i < listeCriteres.size(); i++){
+            if(totalKMUser >= listeCriteres.get(i)){
+                listeLevelsObetenu.add(i+1);
+            }
+        }
+        return listeLevelsObetenu;
+    }
+
+    //*****Méthode à tester*****
+    //Calcule les points bonus a partir des km enregistrés et la dernière mérite reçu
+    public double calculPointsBonus(int enregistrementKM){
+        double pointsBonusBase = enregistrementKM * 0.1;
+        int maxMerite = this.imeriteuserdao.getDernierMeriteObtenu(this.userConnected.getUser().getIdUser());
+
+        switch(maxMerite){
+            case 1:
+                pointsBonusBase += pointsBonusBase * 0.1;
+            break;
+            case 2:
+                pointsBonusBase += pointsBonusBase * 0.2;
+            break;
+            case 3:
+                pointsBonusBase += pointsBonusBase * 0.3;
+            break;
+            case 4:
+                pointsBonusBase += pointsBonusBase * 0.4;
+            break;
+            case 5:
+                pointsBonusBase += pointsBonusBase * 0.5;
+            break;
+            case 6:
+                pointsBonusBase += pointsBonusBase * 0.6;
+            break;
+            case 7:
+                pointsBonusBase += pointsBonusBase * 0.7;
+            break;
+        }
+        return pointsBonusBase;
+    }
+
+    public void updatePointsBonus(double pointsBonus){
+        double pointsActuel = this.iuserdao.getPointsBonus(this.userConnected.getUser().getIdUser());
+        double pointsTotal = pointsActuel + pointsBonus;
+        this.iuserdao.updatePointsBonus(pointsTotal, this.userConnected.getUser().getIdUser());
+    }
+
+    //Met a jour la DB avec les Merites reçu après avoir rendu le vélo
+    public void updateMerites(ArrayList<Integer> lvlMeritesObtenus){
+        if(lvlMeritesObtenus.size() > 0){
+            for(int lvlMerite : lvlMeritesObtenus){
+                this.imeriteuserdao.updateMeritesObtenus(lvlMerite, this.userConnected.getUser().getIdUser());
+            }
+        }
+    }
+    ///////////////////////////////
+    /////Méthodes Reservation//////
+    ///////////////////////////////
+
+    public boolean checkDisponibilitesReservation(int idVelo, String dateDebut, String dateFin){
+        int dispo = this.iresdao.checkDispo(idVelo, this.userConnected.getUser().getIdUser(), dateDebut, dateFin);
+
+        if(dispo == 1){
+            return false;
+        }
+        else{
+            return true;
+        }
+        
+    }
+
+    public void insertReservation(String idVelo, String dateDebut, String dateFin, String choixAboUserString){
+        this.iresdao.insertReservation(Integer.parseInt(idVelo), this.userConnected.getUser().getIdUser(), dateDebut, dateFin, choixAboUserString);
+    }
+
+    public void getReservations(){
+        ArrayList<Reservation> listeReservations = new ArrayList<>();
+        listeReservations = this.iresdao.getListeReservations(this.userConnected.getUser().getIdUser());
+        String listeReservationsString = "";
+        if(listeReservations.size() > 0){
+            for(Reservation r : listeReservations){
+                Velo v = this.ivelodao.getVelo(r.getIdVelo());
+                listeReservationsString += v.getModele()+","+
+                v.getNumeroSerie()+","+
+                r.getDateDebut().toString()+","+
+                r.getDateFin().toString()+","+
+                Integer.toString(v.getIdVelo())+","+
+                r.getChoixAbonnement()+","+
+                r.getIdReservation()+";";
+            }
+            listeReservationsString = listeReservationsString.substring(0, listeReservationsString.length() -1);
+            support.firePropertyChange("retour-liste-mes-reservations", "", listeReservationsString);
+        }
+        else{
+            support.firePropertyChange("retour-liste-mes-reservations", "", "Pas de réservations");
+        }
+        
+    }
+
+    public void annulerReservation(String idReservation){
+        this.iresdao.annulerReservation(Integer.parseInt(idReservation));
+    }
+
+    public void createAboLocation(String listeNomsAccessoires, String listeInfoEtDates, String listePrix, String listeInfoVelo){
+        String[] arrayListeInfoVelo = listeInfoVelo.split(",");
+        String[] arrayListeInfoEtDates = listeInfoEtDates.split(",");
+        String[] arrayListePrix = listePrix.split(",");
+        String[] arrayListeAccessoires = listeNomsAccessoires.split(",");
+        ArrayList<Accessoire> listeAccessoires = new ArrayList<>();
+        ArrayList<String> idAccessoires = new ArrayList<>();
+
+        for(String s : arrayListeAccessoires){
+            Accessoire a = this.iaccessoiredao.getAccessoiresIdFromName(s);
+            listeAccessoires.add(a);
+        }
+        if(listeAccessoires.size() > 0 && listeAccessoires.get(0) != null){
+            for(Accessoire a : listeAccessoires){
+                idAccessoires.add(Integer.toString(a.getIdAccessoires()));
+            }
+        }
+
+        Double prixAbo = Double.parseDouble(arrayListePrix[0]);
+        Double prixTotal = Double.parseDouble(arrayListePrix[2]);
+
+        LocalDate dateDebut = LocalDate.parse(arrayListeInfoEtDates[1]);
+        LocalDate dateFin = LocalDate.parse(arrayListeInfoEtDates[2]);
+
+        int idVelo = Integer.parseInt(arrayListeInfoVelo[0]);
+
+        Velo v = ivelodao.getVelo(idVelo);
+
+        int idAbonnementUtilisateur = this.createAbonnement(v, arrayListeInfoEtDates[3], prixAbo);
+        int idLoc = this.createLocation(idAbonnementUtilisateur, prixTotal, dateDebut, dateFin);
+
+        this.createAccessoireLocation(idAccessoires, idLoc);
+        this.updateVeloToIndispo(v.getIdVelo());
+    }
+
+    ///////////////////////////
+    /////Méthodes Location/////
+    ///////////////////////////
+
+    public void showPageHistorique(){
+        ArrayList<String> listeLocations = this.ilocationdao.getLocationsById(this.userConnected.getUser().getIdUser());
+        
+        this.support.firePropertyChange("retour-page-historique", "", listeLocations);
+    }
+
+    //Méthodes DB
+    public void checkDataExistsVelo(){
+        if(this.ivelodao.checkDonneesExiste() == 0){
+            this.ivelodao.insertDonneesClassique();
+            this.ivelodao.insertDonneesElectrique();
+            this.ivelodao.insertDonneesEnfant();
+        }
+    }
+    public void checkDataExistsMerite(){
+        if(this.imeritedao.checkDonneesExiste() == 0){
+            this.imeritedao.insertDonneesMerite();
+        }
+    }
+    public void checkDataExistsAbonnement(){
+        if(this.iabonnementdao.checkDonneesExiste() == 0){
+            this.iabonnementdao.insertDonneesAbonnement();
+        }
+    }
+    public void checkDataExistsAccessoire(){
+        if(this.iaccessoiredao.checkDonneesExiste() == 0){
+            this.iaccessoiredao.insertDonneesAccessoire();
+        }
+    }
 }

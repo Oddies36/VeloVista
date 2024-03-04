@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 
 import be.velovista.Model.DAL.DBConnection;
 
@@ -15,7 +14,7 @@ public class AbonnementUtilisateurDAO implements IAbonnementUtilisateurDAO {
     }
 
     public void createAbonnementUtilisateurTable(){
-        String sqlString = "CREATE TABLE IF NOT EXISTS AbonnementUtilisateur (id_abonnement_utilisateur SERIAL, id_abonnement int, id_velo int, id_utilisateur int, coutabonnement DECIMAL(10,2), PRIMARY KEY (id_abonnement_utilisateur), FOREIGN KEY (id_abonnement) REFERENCES abonnement(idabonnement), FOREIGN KEY (id_velo) REFERENCES velo(idvelo), FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(iduser));";
+        String sqlString = "CREATE TABLE IF NOT EXISTS AbonnementUtilisateur (id_abonnement_utilisateur SERIAL, id_abonnement int, id_velo int, id_utilisateur int, coutabonnement DECIMAL(10,2), isactif BOOLEAN, PRIMARY KEY (id_abonnement_utilisateur), FOREIGN KEY (id_abonnement) REFERENCES abonnement(idabonnement), FOREIGN KEY (id_velo) REFERENCES velo(idvelo), FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(iduser));";
 
         try(Statement stat =  DBConnection.conn.createStatement()){
             stat.executeUpdate(sqlString);

@@ -20,11 +20,15 @@ public interface IView {
   public void showListeVeloClassique(ArrayList<Velo> listeVelosClass);
   public void showMdpOublie();
   public void showMdpResetAvecMail(String Email);
-  public void showListeAboDispo(ArrayList<Abonnement> listeAbo);
+  public void showListeAboDispo(String listeAbo);
   public void showChoixVeloUtilisateur(Velo v);
   public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires);
+  public void showChoixAccessoiresReservation(ArrayList<String> infoVeloAccessoiresDates);
   public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo);
+  public void showChoixAbonnementsReservation(Velo v, ArrayList<Abonnement> listeAbo);
   public void showAlert(AlertType alertType, String title, String context);
   public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires);
   public void showProfilePage(ArrayList<ArrayList<String>> listeStringVeloUser);
+  public void showMeriteView(ArrayList<String> listeMerites);
+  public void showMesReservations(String reservations);
 }

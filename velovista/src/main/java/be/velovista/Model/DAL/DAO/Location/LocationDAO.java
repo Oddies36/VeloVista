@@ -24,7 +24,7 @@ public class LocationDAO implements ILocationDAO {
     String sqlString = "CREATE TABLE IF NOT EXISTS LocationVelo (id_location_velo SERIAL, id_abonnementutilisateur integer, prixtotal DECIMAL(10,2), DateDebut DATE, DateFin DATE, PRIMARY KEY (id_location_velo),FOREIGN KEY (id_abonnementutilisateur) REFERENCES abonnementutilisateur(id_abonnement_utilisateur))";
 
     try(Statement stat = DBConnection.conn.createStatement()){
-      stat.executeQuery(sqlString);
+      stat.executeUpdate(sqlString);
     }
     catch(SQLException e){
       System.out.println(e.getMessage());
@@ -146,5 +146,32 @@ public class LocationDAO implements ILocationDAO {
       System.out.println(e.getMessage());
     }
     return dateDebut;
+  }
+
+  public ArrayList<String> getLocationsById(int idUser){
+    String sqlString = "select vel.photo, vel.marque, vel.numeroserie, loc.prixtotal, loc.datedebut, loc.datefin from locationvelo as loc inner join abonnementutilisateur as abouti on loc.id_abonnementutilisateur = abouti.id_abonnement_utilisateur inner join velo as vel on abouti.id_velo = vel.idvelo where abouti.id_utilisateur = ?";
+    ArrayList<String> listeLocations = new ArrayList<>();
+    
+    try(PreparedStatement pstat = DBConnection.conn.prepareStatement(sqlString)){
+      pstat.setInt(1, idUser);
+      try(ResultSet rset = pstat.executeQuery()){
+        while(rset.next()){
+          String ligneLocation = rset.getString(1)+","+
+          rset.getString(2)+","+
+          rset.getString(3)+","+
+          rset.getDouble(4)+","+
+          rset.getDate(5)+","+
+          rset.getDate(6);
+          listeLocations.add(ligneLocation);
+        }
+      }
+      catch(SQLException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    return listeLocations;
   }
 }
