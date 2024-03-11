@@ -10,8 +10,8 @@ public class DBConnection {
     private static DBConnection instance;
     private DBProperties dbprop;
 
-    private DBConnection(){
-        try{
+    private DBConnection() {
+        try {
             dbprop = new DBProperties();
 
             String url = dbprop.getUrl();
@@ -20,26 +20,24 @@ public class DBConnection {
 
             DBConnection.conn = DriverManager.getConnection(url, username, password);
             System.out.println("Connection ok");
-        }    
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static DBConnection getConnection(){
-        if(DBConnection.instance == null){
+    public static DBConnection getConnection() {
+        if (DBConnection.instance == null) {
             DBConnection.instance = new DBConnection();
         }
         return DBConnection.instance;
     }
 
-    public static void closeConnection(){
-        try{
-            if(DBConnection.conn != null){
+    public static void closeConnection() {
+        try {
+            if (DBConnection.conn != null) {
                 DBConnection.conn.close();
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }

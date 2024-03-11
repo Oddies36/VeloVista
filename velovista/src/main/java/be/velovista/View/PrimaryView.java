@@ -29,12 +29,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
@@ -74,35 +71,35 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
                     this.showListeVeloClassique((ArrayList<Velo>) evt.getNewValue());
                 break;
             case "resultat-choix-velo-utilisateur":
-                if(evt.getNewValue() instanceof Velo)
+                if (evt.getNewValue() instanceof Velo)
                     this.showChoixVeloUtilisateur((Velo) evt.getNewValue());
                 break;
             case "resultat-nom-liste-abonnements":
-                if(evt.getNewValue().getClass().isAssignableFrom(String.class))
+                if (evt.getNewValue().getClass().isAssignableFrom(String.class))
                     this.showListeAboDispo((String) evt.getNewValue());
                 break;
             case "show-page-profil":
-                if(evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
+                if (evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
                     this.showProfilePage((ArrayList<ArrayList<String>>) evt.getNewValue());
                 break;
             case "retourne-liste-merite":
-                if(evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
+                if (evt.getNewValue().getClass().isAssignableFrom(ArrayList.class))
                     this.showMeriteView((ArrayList<String>) evt.getNewValue());
                 break;
             case "retour-liste-mes-reservations":
-                if(evt.getNewValue() instanceof String)
+                if (evt.getNewValue() instanceof String)
                     this.showMesReservations((String) evt.getNewValue());
                 break;
             case "retourne-info-accessoires-reservation":
-                if(evt.getNewValue() instanceof ArrayList)
+                if (evt.getNewValue() instanceof ArrayList)
                     this.showChoixAccessoiresReservation((ArrayList<String>) evt.getNewValue());
                 break;
             case "retour-recap-reservation":
-                if(evt.getNewValue() instanceof ArrayList)
+                if (evt.getNewValue() instanceof ArrayList)
                     this.showRecapReservation((ArrayList<String>) evt.getNewValue());
                 break;
             case "retour-page-historique":
-                if(evt.getNewValue() instanceof ArrayList)
+                if (evt.getNewValue() instanceof ArrayList)
                     this.showHistorique((ArrayList<String>) evt.getNewValue());
                 break;
             default:
@@ -113,81 +110,76 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     @Override
     public void start(Stage stage) throws IOException {
         PrimaryView.stage = stage;
-        // Préparation du stage pour gérer la fermeture du programme.
         PrimaryView.stage.setOnCloseRequest(this.control.generateCloseEvent());
-        //Velo v = new VeloClassique(10, 1, "zebi", "Classique", true, "blanc", 54, 2022, 500.00, "https://www.statebicycle.com/cdn/shop/products/6061-eBikeCommuter-MatteBlack_1.jpg?v=1684443969");
-        //ArrayList<String> test = new ArrayList<>();
-        // Préparation de la première fenêtre
-        //LocalDate tempDate = LocalDate.now();
         showLoginScreen();
         stage.show();
     }
 
-    public void showLoginScreen(){
+    public void showLoginScreen() {
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
-        //vbox pour le titre et text en dessous
+        // vbox pour le titre et text en dessous
         VBox vboxTitre = new VBox();
         vboxTitre.setAlignment(Pos.CENTER);
         vboxTitre.setPadding(new Insets(20, 0, 0, 0));
-        
-        //vbox pour le login et mdp
+
+        // vbox pour le login et mdp
         VBox vboxLoginMdp = new VBox();
         vboxLoginMdp.setAlignment(Pos.CENTER);
         vboxLoginMdp.setPadding(new Insets(150, 100, 0, 100));
 
-        //hbox pour le text email
+        // hbox pour le text email
         HBox hboxEmailText = new HBox();
 
-        //hbox pour le text password
+        // hbox pour le text password
         HBox hboxPasswordText = new HBox();
         hboxPasswordText.setPadding(new Insets(20, 0, 0, 0));
 
-        //hbox pour pas de compte
+        // hbox pour pas de compte
         HBox hboxPasDeCompte = new HBox();
         hboxPasDeCompte.setAlignment(Pos.CENTER);
         hboxPasDeCompte.setPadding(new Insets(20, 0, 0, 0));
-        
-        //titre
+
+        // titre
         Label titre = new Label("Se connecter");
         titre.setStyle("-fx-font-size: 50;");
-        //texte en dessous de titre
+        // texte en dessous de titre
         Label textSousTitre = new Label("Entrez votre email et votre mot de passe");
 
-        //email text
+        // email text
         Label emailText = new Label("E-mail");
-        //email field
+        // email field
         TextField email = new TextField();
         email.setPromptText("E-mail");
 
-        //password text & forgot password
+        // password text & forgot password
         Label passwordText = new Label("Mot de passe");
         Hyperlink forgotPassword = new Hyperlink("Mot de passe oublié");
 
-        Supplier<String[]> mdpOublie = () -> new String[] {""};
+        Supplier<String[]> mdpOublie = () -> new String[] { "" };
         forgotPassword.setOnAction(control.generateEventHandlerAction("show-mdp-oublie", mdpOublie));
 
-        //password field
+        // password field
         PasswordField password = new PasswordField();
         password.setPromptText("Mot de passe");
 
-        //login button
+        // login button
         Button login = new Button("Connexion");
         setButtonStyle(login, "rond");
         login.setDefaultButton(true);
 
-        Supplier<String[]> userLogin = () -> new String[] {email.getText(), password.getText()};
+        Supplier<String[]> userLogin = () -> new String[] { email.getText(), password.getText() };
         login.setOnAction(control.generateEventHandlerAction("checkLoginCreds", userLogin));
 
-        //pas de compte text & hyperlink
+        // pas de compte text & hyperlink
         Label pasDeCompte = new Label("Pas de compte?");
         Hyperlink creerCompte = new Hyperlink("S'enregistrer");
         creerCompte.setStyle("-fx-font-weight: bold");
-        Supplier<String[]> supplier = () -> new String[] {""};
+        Supplier<String[]> supplier = () -> new String[] { "" };
         creerCompte.setOnAction(control.generateEventHandlerAction("showAccountCreation", supplier));
 
         vboxTitre.getChildren().addAll(titre, textSousTitre);
@@ -204,90 +196,91 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showMainScreen(){
-
-        //parent
+    public void showMainScreen() {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
         GridPane grid = new GridPane();
 
-        //le logo
+        // le logo
         Image logo = new Image(getClass().getResourceAsStream("/images/VeloVistaLogo.png"));
         ImageView viewLogo = new ImageView(logo);
         viewLogo.setFitWidth(200);
         viewLogo.setPreserveRatio(true);
 
-        //l'image background
+        // l'image background
         Image backgroundImage = new Image(getClass().getResourceAsStream("/images/background.jpg"));
         ImageView viewBackgroundImage = new ImageView(backgroundImage);
         viewBackgroundImage.setFitHeight(450);
-        //viewBackgroundImage.setFitWidth(500);
         GridPane.setMargin(viewBackgroundImage, new Insets(20, 20, 20, 100));
         viewBackgroundImage.setPreserveRatio(true);
 
-        //span l'image sur 2 colonnes
+        // span l'image sur 2 colonnes
         GridPane.setRowIndex(viewBackgroundImage, 1);
         GridPane.setColumnIndex(viewBackgroundImage, 1);
         GridPane.setColumnSpan(viewBackgroundImage, 2);
 
-        //bouton pour voir les abonnements
+        // bouton pour voir les abonnements
         HBox hboxBoutonsAbo = new HBox();
         Button boutonAbo = new Button("Nos abonnements");
         GridPane.setMargin(hboxBoutonsAbo, new Insets(0, 0, 0, 20));
         setButtonStyle(boutonAbo, "Rect");
 
-        Supplier<String[]> showListeAboSupplier = () -> new String[] {""};
+        Supplier<String[]> showListeAboSupplier = () -> new String[] { "" };
         boutonAbo.setOnAction(control.generateEventHandlerAction("show-liste-abo", showListeAboSupplier));
 
-        //bouton pour voir les vélos
+        // bouton pour voir les vélos
         HBox hboxBoutonVelo = new HBox();
         hboxBoutonVelo.setAlignment(Pos.CENTER_RIGHT);
         Button boutonVelo = new Button("Nos vélos");
         GridPane.setMargin(hboxBoutonVelo, new Insets(0, 20, 0, 0));
         setButtonStyle(boutonVelo, "Rect");
 
-        //event sur bouton "nos velos"
-        Supplier<String[]> boutonVeloSupplier = () -> new String[] {""};
+        // event sur bouton "nos velos"
+        Supplier<String[]> boutonVeloSupplier = () -> new String[] { "" };
         boutonVelo.setOnAction(control.generateEventHandlerAction("show-velo-page", boutonVeloSupplier));
 
-        //vbox menu et items dans le menu
+        // vbox menu et items dans le menu
         VBox vboxMenu = new VBox();
         vboxMenu.setAlignment(Pos.CENTER);
         Button boutonProfil = new Button("Profil");
         setButtonStyle(boutonProfil, "RectRond");
 
-        Supplier<String[]> profileSupplier = () -> new String[] {""};
+        Supplier<String[]> profileSupplier = () -> new String[] { "" };
         boutonProfil.setOnAction(control.generateEventHandlerAction("show-page-profil", profileSupplier));
 
         Button boutonHistorique = new Button("Mon historique");
 
-        Supplier<String[]> historiqueSupplier = () -> new String[] {""};
+        Supplier<String[]> historiqueSupplier = () -> new String[] { "" };
         boutonHistorique.setOnAction(control.generateEventHandlerAction("show-page-historique", historiqueSupplier));
 
         setButtonStyle(boutonHistorique, "RectRond");
         Button boutonMesReservations = new Button("Mes réservation");
         setButtonStyle(boutonMesReservations, "RectRond");
 
-        Supplier<String[]> mesReservationsSupplier = () -> new String[] {""};
-        boutonMesReservations.setOnAction(control.generateEventHandlerAction("show-mes-reservations", mesReservationsSupplier));
+        Supplier<String[]> mesReservationsSupplier = () -> new String[] { "" };
+        boutonMesReservations
+                .setOnAction(control.generateEventHandlerAction("show-mes-reservations", mesReservationsSupplier));
 
         Button boutonCommentaires = new Button("Commentaires");
         setButtonStyle(boutonCommentaires, "RectRond");
+        boutonCommentaires.setDisable(true);
         Button boutonDeconnexion = new Button("Déconnexion");
         setButtonStyle(boutonDeconnexion, "RectRond");
 
-        Supplier<String[]> deconnexionSupplier = () -> new String[] {""};
+        Supplier<String[]> deconnexionSupplier = () -> new String[] { "" };
         boutonDeconnexion.setOnAction(control.generateEventHandlerAction("show-login-screen", deconnexionSupplier));
 
         FontAwesomeIconView notificationFont = new FontAwesomeIconView(FontAwesomeIcon.BELL);
         notificationFont.setFill(Color.WHITE);
-        
+
         Button notificationBouton = new Button();
         setButtonStyle(notificationBouton, "retour");
         notificationBouton.setGraphic(notificationFont);
         GridPane.setMargin(notificationBouton, new Insets(0, 0, 0, 70));
         GridPane.setMargin(hboxBoutonsAbo, new Insets(0, 0, 0, 70));
+        notificationBouton.setDisable(true);
 
         grid.add(viewLogo, 0, 0);
         grid.add(vboxMenu, 0, 1);
@@ -296,12 +289,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         grid.add(hboxBoutonVelo, 2, 2);
         grid.add(notificationBouton, 3, 0);
 
-        grid.setGridLinesVisible(false);
-
-
-
-        
-        vboxMenu.getChildren().addAll(boutonProfil, boutonHistorique, boutonMesReservations, boutonCommentaires, boutonDeconnexion);
+        vboxMenu.getChildren().addAll(boutonProfil, boutonHistorique, boutonMesReservations, boutonCommentaires,
+                boutonDeconnexion);
         hboxBoutonsAbo.getChildren().addAll(boutonAbo);
         hboxBoutonVelo.getChildren().addAll(boutonVelo);
         actualParent.getChildren().addAll(grid);
@@ -312,9 +301,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-
-    public void showHistorique(ArrayList<String> listeLocations){
-        //parent
+    public void showHistorique(ArrayList<String> listeLocations) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -323,7 +311,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER);
 
@@ -333,7 +321,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         HBox.setHgrow(hboxTitre, Priority.ALWAYS);
         hboxTitre.setAlignment(Pos.CENTER);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {};
         but.setOnAction(control.generateEventHandlerAction("retour-main-page", backSupplier));
@@ -341,13 +329,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Mon historique de locations");
         titre.setStyle("-fx-font-size: 50;");
 
-        //center
+        // center
         VBox vboxListeHistorique = new VBox();
         ScrollPane scrP = new ScrollPane();
         scrP.setContent(vboxListeHistorique);
         scrP.setStyle("-fx-background: white;");
-        
-        for(String s : listeLocations){
+
+        for (String s : listeLocations) {
             HBox hboxLigneLocation = new HBox(10);
 
             String photo = s.split(",")[0];
@@ -361,7 +349,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             ImageView imgview = new ImageView(img);
             imgview.setFitWidth(100);
             imgview.setPreserveRatio(true);
-            
+
             VBox vboxMarque = new VBox();
             Label labTitreMarque = new Label("Marque:");
             Label labMarque = new Label(marque);
@@ -376,7 +364,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
             VBox vboxPrixTotal = new VBox();
             Label labTitrePrixTotal = new Label("Prix total:");
-            Label labPrixTotal = new Label(prixTotal+"€");
+            Label labPrixTotal = new Label(prixTotal + "€");
             labTitrePrixTotal.setStyle("-fx-font-weight: bold");
             vboxPrixTotal.getChildren().addAll(labTitrePrixTotal, labPrixTotal);
 
@@ -392,8 +380,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             labTitreDateFin.setStyle("-fx-font-weight: bold");
             vboxDateFin.getChildren().addAll(labTitreDateFin, labDateFin);
 
-
-            hboxLigneLocation.getChildren().addAll(imgview, vboxMarque, vboxNumSerie, vboxPrixTotal, vboxDateDebut, vboxDateFin);
+            hboxLigneLocation.getChildren().addAll(imgview, vboxMarque, vboxNumSerie, vboxPrixTotal, vboxDateDebut,
+                    vboxDateFin);
             vboxListeHistorique.getChildren().add(hboxLigneLocation);
         }
 
@@ -407,92 +395,91 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-
-    public void showAccountCreation(){
-
-        //parent
+    public void showAccountCreation() {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
-        
 
-        //vbox pour le titre et text en dessous
+        // vbox pour le titre et text en dessous
         VBox vboxTitre = new VBox();
         vboxTitre.setAlignment(Pos.CENTER);
         vboxTitre.setPadding(new Insets(20, 0, 0, 0));
 
-        //titre
+        // titre
         Label titre = new Label("Créer son compte");
         titre.setStyle("-fx-font-size: 50;");
-        //texte en dessous de titre
+
+        // texte en dessous de titre
         Label textSousTitre = new Label("Créez votre compte pour pouvoir louer un vélo en toute sécurité.");
 
-
-
-        //vbox pour le formulaire a remplir
+        // vbox pour le formulaire a remplir
         VBox vboxFormulaireInscription = new VBox();
         vboxFormulaireInscription.setAlignment(Pos.CENTER);
         vboxFormulaireInscription.setPadding(new Insets(80, 100, 0, 100));
 
-        //hbox pour le label Nom
+        // hbox pour le label Nom
         HBox hboxLabelNom = new HBox();
-        //label nom
+        // label nom
         Label labelNom = new Label("Nom");
         TextField fieldNom = new TextField();
         fieldNom.setPromptText("Nom");
-        //hbox prénom
+        // hbox prénom
         HBox hboxLabelPrenom = new HBox();
-        //label prenom
+        // label prenom
         Label labelPrenom = new Label("Prénom");
         TextField fieldPrenom = new TextField();
         fieldPrenom.setPromptText("Prénom");
-        //hbox numtel
+        // hbox numtel
         HBox hboxLabelNumTel = new HBox();
-        //label numtel
+        // label numtel
         Label labelNumTel = new Label("Numéro de téléphone");
         TextField fieldNumTel = new TextField();
         fieldNumTel.setPromptText("Numéro de téléphone");
-        //hbox pour le label Email
+        // hbox pour le label Email
         HBox hboxLabelEmail = new HBox();
-        //label email
+        // label email
         Label labelEmail = new Label("Email");
         TextField fieldEmail = new TextField();
         fieldEmail.setPromptText("Email");
-        //hbox pour le label password
+        // hbox pour le label password
         HBox hboxLabelPassword = new HBox();
-        //label password
+        // label password
         Label labelPassword = new Label("Mot de passe");
         PasswordField fieldPassword = new PasswordField();
         fieldPassword.setPromptText("Mot de passe");
-        //hbox pour le label password
+        // hbox pour le label password
         HBox hboxLabelPasswordRepeat = new HBox();
-        //label password
+        // label password
         Label labelPasswordRepeat = new Label("Confirmer le mot de passe");
         PasswordField fieldPasswordRepeat = new PasswordField();
         fieldPasswordRepeat.setPromptText("Confirmez le mot de passe");
 
-        //bouton pour creer le compte
+        // bouton pour creer le compte
         Button creerCompte = new Button("Créer son compte");
         setButtonStyle(creerCompte, "rond");
         creerCompte.setDefaultButton(true);
 
-        Supplier<String[]> creationCompteSupplier = () -> new String[] {fieldNom.getText(), fieldPrenom.getText(), fieldEmail.getText(), fieldNumTel.getText(), fieldPassword.getText(), fieldPasswordRepeat.getText()};
+        Supplier<String[]> creationCompteSupplier = () -> new String[] { fieldNom.getText(), fieldPrenom.getText(),
+                fieldEmail.getText(), fieldNumTel.getText(), fieldPassword.getText(), fieldPasswordRepeat.getText() };
         creerCompte.setOnAction(control.generateEventHandlerAction("creation-compte-utilisateur", creationCompteSupplier));
 
-        //hbox pour message et lien retour login
+        // hbox pour message et lien retour login
         HBox hboxRetourLogin = new HBox();
         hboxRetourLogin.setAlignment(Pos.CENTER);
         hboxRetourLogin.setPadding(new Insets(20, 0, 0, 0));
-        //label message retour login
+        // label message retour login
         Label dejaUnCompte = new Label("Déjà client?");
-        //Lien retour login
+        // Lien retour login
         Hyperlink retourLogin = new Hyperlink("Se connecter");
         retourLogin.setStyle("-fx-font-weight: bold");
 
-        Supplier<String[]> supplier = () -> new String[] {""};
+        Supplier<String[]> supplier = () -> new String[] { "" };
         retourLogin.setOnAction(control.generateEventHandlerAction("show-login-screen", supplier));
 
         vboxTitre.getChildren().addAll(titre, textSousTitre);
-        vboxFormulaireInscription.getChildren().addAll(hboxLabelNom, fieldNom, hboxLabelPrenom, fieldPrenom, hboxLabelNumTel, fieldNumTel, hboxLabelEmail, fieldEmail, hboxLabelPassword, fieldPassword, hboxLabelPasswordRepeat, fieldPasswordRepeat, creerCompte, hboxRetourLogin);
+        vboxFormulaireInscription.getChildren().addAll(hboxLabelNom, fieldNom, hboxLabelPrenom, fieldPrenom,
+                hboxLabelNumTel, fieldNumTel, hboxLabelEmail, fieldEmail, hboxLabelPassword, fieldPassword,
+                hboxLabelPasswordRepeat, fieldPasswordRepeat, creerCompte, hboxRetourLogin);
         hboxLabelNom.getChildren().addAll(labelNom);
         hboxLabelPrenom.getChildren().addAll(labelPrenom);
         hboxLabelNumTel.getChildren().addAll(labelNumTel);
@@ -501,7 +488,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         hboxLabelPasswordRepeat.getChildren().addAll(labelPasswordRepeat);
         hboxRetourLogin.getChildren().addAll(dejaUnCompte, retourLogin);
         actualParent.getChildren().addAll(vboxTitre, vboxFormulaireInscription);
-        
+
         stage.setResizable(false);
         scene = new Scene(actualParent, 500, 600);
         stage.setScene(scene);
@@ -509,58 +496,52 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showMdpOublie(){
-
-        //parent
+    public void showMdpOublie() {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
-        
 
-        //vbox pour le titre et text en dessous
+        // vbox pour le titre et text en dessous
         VBox vboxTitre = new VBox();
         vboxTitre.setAlignment(Pos.CENTER);
         vboxTitre.setPadding(new Insets(20, 0, 0, 0));
 
-        //titre
+        // titre
         Label titre = new Label("Mot de passe oublié?");
         titre.setStyle("-fx-font-size: 50;");
-        //texte en dessous de titre
+        // texte en dessous de titre
         Label textSousTitre = new Label("Veuillez saisir votre email afin de réinitialiser votre mot de passe.");
 
-
-
-        //vbox pour le formulaire a remplir
+        // vbox pour le formulaire a remplir
         VBox vboxFormulaireReset = new VBox();
         vboxFormulaireReset.setAlignment(Pos.CENTER);
         vboxFormulaireReset.setPadding(new Insets(100, 100, 0, 100));
 
-        //hbox pour le label Email
+        // hbox pour le label Email
         HBox hboxLabelEmail = new HBox();
-        //label email
+        // label email
         Label labelEmail = new Label("Email");
         TextField fieldEmail = new TextField();
         fieldEmail.setPromptText("Email");
 
-        //bouton pour valider l'email
+        // bouton pour valider l'email
         Button reinitialiserMdp = new Button("Réinitialiser");
         setButtonStyle(reinitialiserMdp, "rond");
         reinitialiserMdp.setDefaultButton(true);
 
-        /////////////////////////////////////
-        Supplier<String[]> creationCompteSupplier = () -> new String[] {fieldEmail.getText()};
+        Supplier<String[]> creationCompteSupplier = () -> new String[] { fieldEmail.getText() };
         reinitialiserMdp.setOnAction(control.generateEventHandlerAction("reinitialiser-mdp", creationCompteSupplier));
-        /////////////////////////////////////
 
-        //hbox pour message et lien retour login
+        // hbox pour message et lien retour login
         HBox hboxRetourLogin = new HBox();
         hboxRetourLogin.setAlignment(Pos.CENTER);
         hboxRetourLogin.setPadding(new Insets(20, 0, 0, 0));
 
-        //Lien retour login
+        // Lien retour login
         Hyperlink retourLogin = new Hyperlink("Retour à la page de connexion");
         retourLogin.setStyle("-fx-font-weight: bold");
 
-        Supplier<String[]> supplier = () -> new String[] {""};
+        Supplier<String[]> supplier = () -> new String[] { "" };
         retourLogin.setOnAction(control.generateEventHandlerAction("show-login-screen", supplier));
 
         vboxTitre.getChildren().addAll(titre, textSousTitre);
@@ -570,17 +551,15 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         hboxRetourLogin.getChildren().addAll(retourLogin);
         actualParent.getChildren().addAll(vboxTitre, vboxFormulaireReset);
-        
+
         stage.setResizable(false);
         scene = new Scene(actualParent, 500, 600);
         stage.setScene(scene);
         stage.centerOnScreen();
     }
 
-
-    public void showMdpResetAvecMail(String Email){
-
-        //parent
+    public void showMdpResetAvecMail(String Email) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -602,13 +581,15 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setButtonStyle(valideNouveauMdp, "rond");
         valideNouveauMdp.setDefaultButton(true);
 
-        Supplier<String[]> supplier = () -> new String[] {Email, passwordField.getText(), repeatPasswordField.getText()};
+        Supplier<String[]> supplier = () -> new String[] { Email, passwordField.getText(),
+                repeatPasswordField.getText() };
         valideNouveauMdp.setOnAction(control.generateEventHandlerAction("write-new-password", supplier));
 
         actualParent.getChildren().addAll(vBoxPasswordFields);
         hBoxPasswordLabel.getChildren().addAll(passwordLabel);
         hBoxRepeatPasswordLabel.getChildren().addAll(repeatPasswordLabel);
-        vBoxPasswordFields.getChildren().addAll(hBoxPasswordLabel, passwordField, hBoxRepeatPasswordLabel, repeatPasswordField, valideNouveauMdp);
+        vBoxPasswordFields.getChildren().addAll(hBoxPasswordLabel, passwordField, hBoxRepeatPasswordLabel,
+                repeatPasswordField, valideNouveauMdp);
 
         stage.setResizable(false);
         scene = new Scene(actualParent, 400, 250);
@@ -617,15 +598,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showProfilePage(ArrayList<ArrayList<String>> listeStringVeloUser){
-
-
-
-
+    public void showProfilePage(ArrayList<ArrayList<String>> listeStringVeloUser) {
         ArrayList<String> listeStringVeloActuel = listeStringVeloUser.get(0);
         ArrayList<String> listeStringUser = listeStringVeloUser.get(1);
-        
-        //parent
+
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -634,11 +611,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {};
         but.setOnAction(control.generateEventHandlerAction("retour-main-page", backSupplier));
@@ -652,32 +629,31 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Mon profil");
         titre.setStyle("-fx-font-size: 50;");
 
-        //center
+        // center
         VBox vboxCentral = new VBox();
         Label titreVeloActuel = new Label("Location en cours: ");
         setLabelStyle(titreVeloActuel);
         VBox veloActuel = new VBox();
-        if(listeStringVeloActuel.size() > 0){
+        if (listeStringVeloActuel.size() > 0) {
             HBox hboxVeloActBoutonRetour = new HBox(20);
             Image img = new Image(listeStringVeloActuel.get(9), true);
             ImageView imgview = new ImageView(img);
             imgview.setFitWidth(100);
             imgview.setPreserveRatio(true);
-            Label modeleVelo = new Label("Modèle: "+listeStringVeloActuel.get(2));
-            Label numSerieVelo = new Label("Numéro de série: "+listeStringVeloActuel.get(1));
-            Label couleurVelo = new Label("Couleur: "+listeStringVeloActuel.get(5));
-            
+            Label modeleVelo = new Label("Modèle: " + listeStringVeloActuel.get(2));
+            Label numSerieVelo = new Label("Numéro de série: " + listeStringVeloActuel.get(1));
+            Label couleurVelo = new Label("Couleur: " + listeStringVeloActuel.get(5));
+
             Button retournerVelo = new Button("Retourner le vélo");
             HBox.setMargin(retournerVelo, new Insets(20, 0, 0, 0));
-            
+
             hboxVeloActBoutonRetour.getChildren().addAll(imgview, retournerVelo);
             veloActuel.getChildren().addAll(hboxVeloActBoutonRetour, modeleVelo, numSerieVelo, couleurVelo);
 
-            Supplier<String[]> retournerVeloSupplier = () -> new String[] {listeStringVeloActuel.get(0)};
+            Supplier<String[]> retournerVeloSupplier = () -> new String[] { listeStringVeloActuel.get(0) };
             retournerVelo.setOnAction(control.generateEventHandlerAction("retourner-velo", retournerVeloSupplier));
 
-        }
-        else{
+        } else {
             Label pasDeVelo = new Label("Pas de location en cours");
             veloActuel.getChildren().add(pasDeVelo);
         }
@@ -708,12 +684,18 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         TextField numTelField = new TextField();
         hboxNumTel.getChildren().addAll(numTel, numTelField);
 
-        //bottom
+        HBox hboxTotalKM = new HBox();
+        Label totalKM = new Label("Total des KM parcouru: " + listeStringUser.get(5) + "KM");
+        totalKM.setMinWidth(300);
+        hboxTotalKM.getChildren().addAll(totalKM);
+
+        // bottom
         HBox hboxBotButtons = new HBox(30);
         Button saveBut = new Button("Sauvegarder");
         setButtonStyle(saveBut, "rond");
 
-        Supplier<String[]> sauvegardeProfilSupplier = () -> new String[] {nomField.getText(), prenomField.getText(), emailField.getText(), numTelField.getText()};
+        Supplier<String[]> sauvegardeProfilSupplier = () -> new String[] { nomField.getText(), prenomField.getText(),
+                emailField.getText(), numTelField.getText() };
         saveBut.setOnAction(control.generateEventHandlerAction("sauvegarde-profil", sauvegardeProfilSupplier));
 
         Button achievementBut = new Button("Mérites");
@@ -724,7 +706,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         hboxBotButtons.getChildren().addAll(saveBut, achievementBut);
 
-        vboxProfilUtilisatuer.getChildren().addAll(hboxNom, hboxPrenom, hboxEmail, hboxNumTel);
+        vboxProfilUtilisatuer.getChildren().addAll(hboxNom, hboxPrenom, hboxEmail, hboxNumTel, hboxTotalKM);
         vboxCentral.getChildren().addAll(titreVeloActuel, veloActuel, vboxProfilUtilisatuer);
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
@@ -739,29 +721,27 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         scene = new Scene(actualParent, 1200, 700);
         stage.setScene(scene);
         stage.centerOnScreen();
-
     }
 
-    public void showMeriteView(ArrayList<String> listeMerites){
-
+    public void showMeriteView(ArrayList<String> listeMerites) {
         String listeMeritesObt = listeMerites.get(0);
         String listeMeritesNonObt = listeMerites.get(1);
         String nombreKMRestant = listeMerites.get(2);
         String pointsBonus = listeMerites.get(3);
-        
+
         String[] meritesObt = listeMeritesObt.split(";");
         String[] meritesNonObt = listeMeritesNonObt.split(";");
 
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
         BorderPane bp = new BorderPane();
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {};
         but.setOnAction(control.generateEventHandlerAction("show-page-profil", backSupplier));
@@ -774,20 +754,21 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Label titre = new Label("Mes mérites");
         titre.setStyle("-fx-font-size: 50;");
-        Label labSousTitre = new Label("Recevez des points bonus par KM parcouru en vélo. Vos points augmenteront dépendant du plus haut mérit.");
+        Label labSousTitre = new Label(
+                "Recevez des points bonus par KM parcouru en vélo. Vos points augmenteront dépendant du plus haut mérit.");
 
-        //center
+        // center
         VBox vboxListeToutMerits = new VBox();
         vboxListeToutMerits.setPadding(new Insets(20, 0, 0, 50));
         Label labNonObt = new Label("Mérites à obtenir: ");
         setLabelStyle(labNonObt);
 
         VBox vboxListeNomsNonObt = new VBox();
-        if(meritesNonObt.length > 0 && !meritesNonObt[0].equals("")){
-            for(String mNonObt : meritesNonObt){
+        if (meritesNonObt.length > 0 && !meritesNonObt[0].equals("")) {
+            for (String mNonObt : meritesNonObt) {
                 String nomMerite = mNonObt.split(",")[1] + " : " + mNonObt.split(",")[2];
                 String critereMerite = "Critère: " + mNonObt.split(",")[3] + "KM";
-                
+
                 Label lab = new Label(nomMerite);
                 lab.setUnderline(true);
                 Label labCritere = new Label(critereMerite);
@@ -800,8 +781,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setLabelStyle(labObt);
 
         VBox vboxListeNomsObt = new VBox();
-        if(meritesObt.length > 0 && !meritesObt[0].equals("")){
-            for(String mObt : meritesObt){
+        if (meritesObt.length > 0 && !meritesObt[0].equals("")) {
+            for (String mObt : meritesObt) {
                 String nomMerite = mObt.split(",")[1] + " : " + mObt.split(",")[2];
                 String critereMerite = "Critère: " + mObt.split(",")[3] + "KM";
                 String dateObt = "Date obtenu: " + mObt.split(",")[4];
@@ -821,7 +802,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
-        vboxListeToutMerits.getChildren().addAll(labSousTitre, labNonObt, vboxListeNomsNonObt, labObt, vboxListeNomsObt, kmRestant, labNbPointsBonus);
+        vboxListeToutMerits.getChildren().addAll(labSousTitre, labNonObt, vboxListeNomsNonObt, labObt, vboxListeNomsObt,
+                kmRestant, labNbPointsBonus);
         bp.setTop(hboxTitreRetour);
         bp.setCenter(vboxListeToutMerits);
         actualParent.getChildren().addAll(bp);
@@ -831,9 +813,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showVeloCategory(ArrayList<String> listePrixTypeVelos){
-
-        //parent
+    public void showVeloCategory(ArrayList<String> listePrixTypeVelos) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -841,13 +822,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
-        Supplier<String[]> butRetourSupplier = () -> new String[] {""};
+        Supplier<String[]> butRetourSupplier = () -> new String[] { "" };
         but.setOnAction(control.generateEventHandlerAction("retour-main-page", butRetourSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -859,7 +840,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Nos vélos");
         titre.setStyle("-fx-font-size: 50;");
 
-        //center
+        // center
         Image imgVeloClassique = new Image(getClass().getResourceAsStream("/images/class.png"));
         ImageView viewImgVeloClassique = new ImageView(imgVeloClassique);
         viewImgVeloClassique.setFitHeight(150);
@@ -878,7 +859,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         GridPane.setMargin(viewImgVeloEnfant, new Insets(10, 0, 0, 0));
         GridPane.setMargin(viewImgVeloElectrique, new Insets(10, 0, 0, 0));
-        
+
         VBox vboxClassique = new VBox(10);
         VBox vboxElectrique = new VBox(10);
         VBox vboxEnfant = new VBox(10);
@@ -890,15 +871,18 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label labTitreEnfant = new Label("Vélos enfants");
         setLabelStyle(labTitreEnfant);
 
-        Label prixVeloClassique = new Label("Prix / jour: " + listePrixTypeVelos.get(0)+"€");
-        Label descriptionVeloClassique = new Label("Vélo classique idéal pour des balades en ville ou sur des pistes cyclables, offrant confort et simplicité d'utilisation. Parfait pour les déplacements quotidiens ou les loisirs.");
+        Label prixVeloClassique = new Label("Prix / jour: " + listePrixTypeVelos.get(0) + "€");
+        Label descriptionVeloClassique = new Label(
+                "Vélo classique idéal pour des balades en ville ou sur des pistes cyclables, offrant confort et simplicité d'utilisation. Parfait pour les déplacements quotidiens ou les loisirs.");
         descriptionVeloClassique.setWrapText(true);
         descriptionVeloClassique.setMaxWidth(Double.MAX_VALUE);
-        Label prixVeloElectrique = new Label("Prix / jour: " + listePrixTypeVelos.get(1)+"€");
-        Label descriptionVeloElectrique = new Label("Vélo électrique moderne conçu pour faciliter vos trajets. Offre une assistance électrique pour surmonter les côtes et parcourir de longues distances sans effort. Idéal pour une expérience de cyclisme détendue et rapide.");
+        Label prixVeloElectrique = new Label("Prix / jour: " + listePrixTypeVelos.get(1) + "€");
+        Label descriptionVeloElectrique = new Label(
+                "Vélo électrique moderne conçu pour faciliter vos trajets. Offre une assistance électrique pour surmonter les côtes et parcourir de longues distances sans effort. Idéal pour une expérience de cyclisme détendue et rapide.");
         descriptionVeloElectrique.setWrapText(true);
-        Label prixVeloEnfant = new Label("Prix / jour: " + listePrixTypeVelos.get(2)+"€");
-        Label descriptionVeloEnfant = new Label("Vélo coloré et sécurisé, spécialement conçu pour les jeunes cyclistes. Tailles et modèles adaptés pour encourager l'apprentissage et l'aventure chez les enfants. Parfait pour les premiers tours de roues.");
+        Label prixVeloEnfant = new Label("Prix / jour: " + listePrixTypeVelos.get(2) + "€");
+        Label descriptionVeloEnfant = new Label(
+                "Vélo coloré et sécurisé, spécialement conçu pour les jeunes cyclistes. Tailles et modèles adaptés pour encourager l'apprentissage et l'aventure chez les enfants. Parfait pour les premiers tours de roues.");
         descriptionVeloEnfant.setWrapText(true);
 
         Button choisirVeloClassique = new Button("Voir les vélos classiques");
@@ -920,7 +904,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         vboxClassique.getChildren().addAll(labTitreClassique, prixVeloClassique, descriptionVeloClassique);
         vboxElectrique.getChildren().addAll(labTitreElectrique, prixVeloElectrique, descriptionVeloElectrique);
         vboxEnfant.getChildren().addAll(labTitreEnfant, prixVeloEnfant, descriptionVeloEnfant);
-        
+
         grid.add(viewImgVeloClassique, 0, 0);
         grid.add(vboxClassique, 1, 0);
         grid.add(viewImgVeloElectrique, 0, 1);
@@ -931,13 +915,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         grid.add(choisirVeloElectrique, 2, 1);
         grid.add(choisirVeloEnfant, 2, 2);
 
-        Supplier<String[]> supplierClass = () -> new String[] {"Classique"};
+        Supplier<String[]> supplierClass = () -> new String[] { "Classique" };
         choisirVeloClassique.setOnAction(control.generateEventHandlerAction("show-liste-velo-class", supplierClass));
 
-        Supplier<String[]> supplierElec = () -> new String[] {"Electrique"};
+        Supplier<String[]> supplierElec = () -> new String[] { "Electrique" };
         choisirVeloElectrique.setOnAction(control.generateEventHandlerAction("show-liste-velo-class", supplierElec));
 
-        Supplier<String[]> supplierEnfant = () -> new String[] {"Enfant"};
+        Supplier<String[]> supplierEnfant = () -> new String[] { "Enfant" };
         choisirVeloEnfant.setOnAction(control.generateEventHandlerAction("show-liste-velo-class", supplierEnfant));
 
         hboxTitre.getChildren().addAll(titre);
@@ -951,9 +935,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-
-    public void showListeVeloClassique(ArrayList<Velo> listeVelosClass){
-        //parent
+    public void showListeVeloClassique(ArrayList<Velo> listeVelosClass) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -964,18 +947,18 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         listeVelos.setVgap(20);
         listeVelos.setPrefColumns(4);
         listeVelos.setAlignment(Pos.CENTER);
-        
+
         ScrollPane scrPane = new ScrollPane();
         scrPane.setFitToWidth(true);
         scrPane.setContent(listeVelos);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
-        Supplier<String[]> butRetourSupplier = () -> new String[] {""};
+        Supplier<String[]> butRetourSupplier = () -> new String[] { "" };
         but.setOnAction(control.generateEventHandlerAction("retour-main-page", butRetourSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -987,7 +970,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Nos vélos");
         titre.setStyle("-fx-font-size: 50;");
 
-        for(Velo velclass : listeVelosClass){
+        for (Velo velclass : listeVelosClass) {
             VBox vbox = new VBox();
             Image img = new Image(velclass.getPhoto(), true);
             ImageView imgview = new ImageView();
@@ -1000,17 +983,15 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             Label marque = new Label(velclass.getModele());
             setLabelStyle(marque);
             Label couleur = new Label("Couleur: " + velclass.getCouleur().toString());
-            //Label prix = new Label("Prix: " + String.valueOf(velclass.getPrix()) + "€");
             Label dispo = new Label(this.setDispoText(velclass.isDisponible()));
             setLabelColor(dispo);
 
             vbox.getChildren().addAll(imgview, marque, taille, annee, couleur);
 
-            if(velclass instanceof VeloClassique){
+            if (velclass instanceof VeloClassique) {
                 Label vitesses = new Label("Vitesses: " + velclass.getVitessesFromVelo());
                 vbox.getChildren().add(vitesses);
-            }
-            else if(velclass instanceof VeloElectrique){
+            } else if (velclass instanceof VeloElectrique) {
                 Label autonomie = new Label("Autonomie: " + velclass.getAutonomieFromVelo() + "km");
                 vbox.getChildren().add(autonomie);
             }
@@ -1019,7 +1000,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
             Button choixVelo = new Button("Choisir ce vélo");
 
-            Supplier<String[]> choixVeloSupplier = () -> new String[] {Integer.toString(velclass.getIdVelo())};
+            Supplier<String[]> choixVeloSupplier = () -> new String[] { Integer.toString(velclass.getIdVelo()) };
             choixVelo.setOnAction(control.generateEventHandlerAction("choix-velo-utilisateur", choixVeloSupplier));
 
             vbox.getChildren().addAll(choixVelo);
@@ -1028,12 +1009,12 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Supplier<String[]> supplier = () -> new String[] {};
         but.setOnAction(control.generateEventHandlerAction("show-velo-page", supplier));
-        
+
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
         bp.setTop(hboxTitreRetour);
         bp.setCenter(scrPane);
-        
+
         scrPane.setStyle("-fx-background: white; -fx-background-insets: 0; -fx-padding: 0;");
         actualParent.getChildren().addAll(bp);
 
@@ -1044,22 +1025,21 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
     }
 
 
-    public void showListeAboDispo(String listeAbo){
+    public void showListeAboDispo(String listeAbo) {
         String[] array = listeAbo.split(";");
         BorderPane bp = new BorderPane();
 
-
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
-        Supplier<String[]> butRetourSupplier = () -> new String[] {""};
+        Supplier<String[]> butRetourSupplier = () -> new String[] { "" };
         but.setOnAction(control.generateEventHandlerAction("retour-main-page", butRetourSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -1071,26 +1051,23 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Nos abonnements");
         titre.setStyle("-fx-font-size: 50;");
 
-        //Center
+        // Center
         VBox vboxConteneurListe = new VBox(10);
 
-        for(String s : array){
+        for (String s : array) {
             String[] arrayListeAbo = s.split(",");
             VBox vboxListeAbo = new VBox();
-            Label nomAbo = new Label(arrayListeAbo[0]+" : ");
+            Label nomAbo = new Label(arrayListeAbo[0] + " : ");
             setLabelStyle(nomAbo);
             Label descriptionAbo = new Label(arrayListeAbo[1]);
             vboxListeAbo.getChildren().addAll(nomAbo, descriptionAbo);
             vboxConteneurListe.getChildren().add(vboxListeAbo);
         }
 
-
-
-        //hboxListeAbo.getChildren().addAll(vboxJournalier, vboxHebdo, vboxMensu, vboxSemest, vboxTrimest, vboxAnnu);
         BorderPane.setAlignment(titre, Pos.CENTER);
         BorderPane.setMargin(titre, new Insets(20, 0, 0, 0));
         BorderPane.setMargin(vboxConteneurListe, new Insets(20, 0, 0, 20));
-        
+
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
         bp.setTop(hboxTitreRetour);
@@ -1100,29 +1077,27 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         scene = new Scene(actualParent, 1200, 700);
         stage.setScene(scene);
         stage.centerOnScreen();
-
     }
 
-
-    public void showChoixVeloUtilisateur(Velo v){
-        //parent
+    public void showChoixVeloUtilisateur(Velo v) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
-        
+
         BorderPane bp = new BorderPane();
         GridPane gp = new GridPane();
         gp.setAlignment(Pos.CENTER);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
         FontAwesomeIconView backButtonIcon = new FontAwesomeIconView(FontAwesomeIcon.ARROW_LEFT);
         backButtonIcon.setFill(Color.WHITE);
-        Button but =  new Button();
+        Button but = new Button();
         but.setGraphic(backButtonIcon);
         setButtonStyle(but, "retour");
-        Supplier<String[]> backSupplier = () -> new String[] {v.getType()};
+        Supplier<String[]> backSupplier = () -> new String[] { v.getType() };
         but.setOnAction(control.generateEventHandlerAction("show-liste-velo-class", backSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -1132,14 +1107,12 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         hboxTitre.setAlignment(Pos.CENTER);
 
         Label titre = new Label("Caractéristiques du vélo");
-        //titre.setAlignment(Pos.CENTER);
         titre.setStyle("-fx-font-size: 50;");
-        
+
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
 
-
-        //center
+        // center
         Image img = new Image(v.getPhoto(), true);
         ImageView imgview = new ImageView(img);
         imgview.setFitWidth(400);
@@ -1160,12 +1133,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setLabelStyle(prix);
 
         veloInfo.getChildren().addAll(marque, serial, couleur, taille, age, prix);
-        if(v instanceof VeloClassique){
+        if (v instanceof VeloClassique) {
             Label vitesses = new Label("Vitesses: " + v.getVitessesFromVelo());
             setLabelStyle(vitesses);
             veloInfo.getChildren().add(vitesses);
-        }
-        else if(v instanceof VeloElectrique){
+        } else if (v instanceof VeloElectrique) {
             Label autonomie = new Label("Autonomie: " + v.getAutonomieFromVelo() + "km");
             setLabelStyle(autonomie);
             veloInfo.getChildren().add(autonomie);
@@ -1173,15 +1145,14 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         GridPane.setMargin(veloInfo, new Insets(0, 0, 0, 30));
 
-        //veloInfo.getChildren().addAll(marque, serial, couleur, taille, age, prix);
         gp.add(imgview, 0, 0);
         gp.add(veloInfo, 1, 0);
 
-        //bottom
+        // bottom
         HBox bottomButs = new HBox();
         bottomButs.setAlignment(Pos.CENTER);
         Button louerBut = new Button("Louer");
-        if(!v.isDisponible()){
+        if (!v.isDisponible()) {
             louerBut.setDisable(true);
         }
         setButtonStyle(louerBut, "rond");
@@ -1189,14 +1160,15 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setButtonStyle(reserverBut, "rond");
         Button avisBut = new Button("Avis Clients");
         setButtonStyle(avisBut, "rond");
+        avisBut.setDisable(true);
         bottomButs.getChildren().addAll(louerBut, reserverBut, avisBut);
         HBox.setMargin(louerBut, new Insets(0, 20, 0, 0));
         HBox.setMargin(reserverBut, new Insets(0, 20, 0, 0));
 
-        Supplier<String[]> louerSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
+        Supplier<String[]> louerSupplier = () -> new String[] { Integer.toString(v.getIdVelo()) };
         louerBut.setOnAction(control.generateEventHandlerAction("louer-velo", louerSupplier));
 
-        Supplier<String[]> reserverSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
+        Supplier<String[]> reserverSupplier = () -> new String[] { Integer.toString(v.getIdVelo()) };
         reserverBut.setOnAction(control.generateEventHandlerAction("reserver-velo", reserverSupplier));
 
         bp.setTop(hboxTitreRetour);
@@ -1209,18 +1181,17 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         BorderPane.setMargin(titre, new Insets(30, 0, 0, 0));
 
         actualParent.getChildren().addAll(bp);
-        
+
         stage.setResizable(false);
         scene = new Scene(actualParent, 1200, 700);
         stage.setScene(scene);
         stage.centerOnScreen();
     }
 
-    
-    public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires){
+    public void showChoixAccessoires(Velo v, ArrayList<Accessoire> listeAccessoires) {
         ArrayList<String> choixAccessoiresId = new ArrayList<>();
 
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1229,13 +1200,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
-        Supplier<String[]> backSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
+        Supplier<String[]> backSupplier = () -> new String[] { Integer.toString(v.getIdVelo()) };
         but.setOnAction(control.generateEventHandlerAction("choix-velo-utilisateur", backSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -1246,7 +1217,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Label titre = new Label("Nos accessoires");
         titre.setStyle("-fx-font-size: 50;");
-        
+
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
 
@@ -1259,10 +1230,9 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             CheckBox chkbox = new CheckBox(acc.getNomAccessoire());
 
             chkbox.selectedProperty().addListener((obs, checkBoxInactif, checkBoxActif) -> {
-                if(checkBoxActif){
+                if (checkBoxActif) {
                     choixAccessoiresId.add(Integer.toString(acc.getIdAccessoires()));
-                }
-                else{
+                } else {
                     choixAccessoiresId.remove(Integer.toString(acc.getIdAccessoires()));
                 }
             });
@@ -1279,7 +1249,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
             VBox.setMargin(chkbox, new Insets(0, 60, 0, 0));
             vboxAccessoire.getChildren().addAll(imgview, descLab, labPrix, chkbox);
-    
+
             gp.add(vboxAccessoire, columnIndex, rowIndex);
             columnIndex++;
             if (columnIndex > 1) {
@@ -1288,11 +1258,12 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             }
         }
 
-        //Bottom
+        // Bottom
         Button butSelection = new Button("Sélectionner");
         setButtonStyle(butSelection, "rond");
-        butSelection.setOnAction(event -> control.showChoixAbonnements(Integer.toString(v.getIdVelo()), choixAccessoiresId));
-        
+        butSelection.setOnAction(
+                event -> control.showChoixAbonnements(Integer.toString(v.getIdVelo()), choixAccessoiresId));
+
         BorderPane.setAlignment(butSelection, Pos.CENTER);
         bp.setBottom(butSelection);
         bp.setTop(hboxTitreRetour);
@@ -1304,14 +1275,12 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showChoixAccessoiresReservation(ArrayList<String> infoVeloAccessoiresDates){
-        //ArrayList<String> choixAccessoiresId = new ArrayList<>();
+    public void showChoixAccessoiresReservation(ArrayList<String> infoVeloAccessoiresDates) {
         String infoAcc = infoVeloAccessoiresDates.get(0);
         String infoVeloDates = infoVeloAccessoiresDates.get(1);
-        //String listeChoixIdAccessoires = "";
 
         String[] accListe = infoAcc.split(";");
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1320,11 +1289,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {};
         but.setOnAction(control.generateEventHandlerAction("show-mes-reservations", backSupplier));
@@ -1337,7 +1306,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Label titre = new Label("Nos accessoires");
         titre.setStyle("-fx-font-size: 50;");
-        
+
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
 
@@ -1352,20 +1321,19 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             CheckBox chkbox = new CheckBox(detailsListe[1]);
 
             chkbox.selectedProperty().addListener((obs, checkBoxInactif, checkBoxActif) -> {
-                if(checkBoxActif){
-                    if(SB.length() > 0){
+                if (checkBoxActif) {
+                    if (SB.length() > 0) {
                         SB.append(",");
                     }
                     SB.append(detailsListe[0]);
-                }
-                else{
+                } else {
                     String selection = SB.toString();
                     String remove = detailsListe[0];
                     String[] parts = selection.split(",");
                     SB.setLength(0);
-                    for(String s : parts){
-                        if(!s.equals(remove)){
-                            if(SB.length() > 0){
+                    for (String s : parts) {
+                        if (!s.equals(remove)) {
+                            if (SB.length() > 0) {
                                 SB.append(",");
                             }
                             SB.append(s);
@@ -1373,8 +1341,6 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
                     }
                 }
             });
-
-            
 
             Label labPrix = new Label("Prix: " + detailsListe[3] + "€");
             Image img = new Image(detailsListe[4], true);
@@ -1388,7 +1354,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
             VBox.setMargin(chkbox, new Insets(0, 60, 0, 0));
             vboxAccessoire.getChildren().addAll(imgview, descLab, labPrix, chkbox);
-    
+
             gp.add(vboxAccessoire, columnIndex, rowIndex);
             columnIndex++;
             if (columnIndex > 1) {
@@ -1397,15 +1363,15 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
             }
         }
 
-        //Bottom
+        // Bottom
         Button butSelection = new Button("Sélectionner");
         setButtonStyle(butSelection, "rond");
         butSelection.setOnAction(e -> {
             String listeAccString = SB.toString();
-            Supplier<String[]> valideSupplier = () -> new String[] {infoVeloDates, listeAccString};
+            Supplier<String[]> valideSupplier = () -> new String[] { infoVeloDates, listeAccString };
             control.generateEventHandlerAction("show-recap-view-reservation", valideSupplier).handle(e);
         });
-        
+
         BorderPane.setAlignment(butSelection, Pos.CENTER);
         bp.setBottom(butSelection);
         bp.setTop(hboxTitreRetour);
@@ -1417,8 +1383,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo){
-        //parent
+    public void showChoixAbonnements(Velo v, ArrayList<String> listeAccessoires, ArrayList<Abonnement> listeAbo) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1427,13 +1393,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
-        Supplier<String[]> backSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
+        Supplier<String[]> backSupplier = () -> new String[] { Integer.toString(v.getIdVelo()) };
         but.setOnAction(control.generateEventHandlerAction("louer-velo", backSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -1444,27 +1410,26 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Label titre = new Label("Nos abonnements");
         titre.setStyle("-fx-font-size: 50;");
-        
-        //center
+
+        // center
         ToggleGroup tog = new ToggleGroup();
         VBox vboxRadioBut = new VBox();
-        for (Abonnement abo : listeAbo){
+        for (Abonnement abo : listeAbo) {
             RadioButton radioBut = new RadioButton(abo.getNomAbonnement());
             radioBut.setToggleGroup(tog);
             vboxRadioBut.getChildren().add(radioBut);
         }
 
-        //bottom
+        // bottom
         HBox hboxBottom = new HBox();
-        //DatePicker datepick = new DatePicker(LocalDate.now());
+        // DatePicker datepick = new DatePicker(LocalDate.now());
         Button validerBut = new Button("Louez immédiatement");
         validerBut.setOnAction(event -> {
             RadioButton choixAboUser = (RadioButton) tog.getSelectedToggle();
-            if(choixAboUser != null){
+            if (choixAboUser != null) {
                 String choixAboUserString = choixAboUser.getText();
                 control.calculDesPrix(v, listeAccessoires, LocalDate.now(), choixAboUserString);
-            }
-            else{
+            } else {
                 control.showAlert(AlertType.WARNING, "Abonnement", "Vous devez choisir un abonnement");
             }
         });
@@ -1482,8 +1447,8 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showChoixAbonnementsReservation(Velo v, ArrayList<Abonnement> listeAbo){
-        //parent
+    public void showChoixAbonnementsReservation(Velo v, ArrayList<Abonnement> listeAbo) {
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1492,13 +1457,13 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
-        Supplier<String[]> backSupplier = () -> new String[] {Integer.toString(v.getIdVelo())};
+        Supplier<String[]> backSupplier = () -> new String[] { Integer.toString(v.getIdVelo()) };
         but.setOnAction(control.generateEventHandlerAction("choix-velo-utilisateur", backSupplier));
 
         hboxTitreRetour.setPadding(new Insets(30, 50, 0, 50));
@@ -1509,17 +1474,17 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Label titre = new Label("Nos abonnements");
         titre.setStyle("-fx-font-size: 50;");
-        
-        //center
+
+        // center
         ToggleGroup tog = new ToggleGroup();
         VBox vboxRadioBut = new VBox();
-        for (Abonnement abo : listeAbo){
+        for (Abonnement abo : listeAbo) {
             RadioButton radioBut = new RadioButton(abo.getNomAbonnement());
             radioBut.setToggleGroup(tog);
             vboxRadioBut.getChildren().add(radioBut);
         }
 
-        //bottom
+        // bottom
         HBox hboxBottom = new HBox();
         DatePicker datepick = new DatePicker(LocalDate.now());
         Button verifDispo = new Button("Vérifiez la disponibilité");
@@ -1528,19 +1493,19 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         verifDispo.setOnAction(event -> {
             RadioButton choixAboUser = (RadioButton) tog.getSelectedToggle();
-            if(choixAboUser != null){
+            if (choixAboUser != null) {
                 String choixAboUserString = choixAboUser.getText();
-                if(control.checkDisponiblites(v.getIdVelo(), datepick.getValue(), choixAboUserString)){
+                if (control.checkDisponiblites(v.getIdVelo(), datepick.getValue(), choixAboUserString)) {
                     valider.setDisable(false);
 
-                    Supplier<String[]> validerSupplier = () -> new String[] {Integer.toString(v.getIdVelo()), datepick.getValue().toString(), choixAboUserString};
+                    Supplier<String[]> validerSupplier = () -> new String[] { Integer.toString(v.getIdVelo()),
+                            datepick.getValue().toString(), choixAboUserString };
                     valider.setOnAction(control.generateEventHandlerAction("valider-reservation", validerSupplier));
+                } else {
+                    showAlert(AlertType.ERROR, "Disponibilité",
+                            "Ce vélo n'est pas disponible à cette date. Veuillez choisir une autre date.");
                 }
-                else{
-                    showAlert(AlertType.ERROR, "Disponibilité", "Ce vélo n'est pas disponible à cette date. Veuillez choisir une autre date.");
-                }
-            }
-            else{
+            } else {
                 control.showAlert(AlertType.WARNING, "Abonnement", "Vous devez choisir un abonnement");
             }
         });
@@ -1558,11 +1523,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showMesReservations(String reservations){
-
+    public void showMesReservations(String reservations) {
         String[] mesReservations = reservations.split(";");
 
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1571,11 +1535,11 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER_LEFT);
 
-        Button but =  new Button("\u2190");
+        Button but = new Button("\u2190");
         setButtonStyle(but, "retour");
         Supplier<String[]> backSupplier = () -> new String[] {};
         but.setOnAction(control.generateEventHandlerAction("retour-main-page", backSupplier));
@@ -1588,50 +1552,50 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
 
         Label titre = new Label("Mes réservations");
         titre.setStyle("-fx-font-size: 50;");
-        
-        //center
+
+        // center
         VBox vboxListeReservations = new VBox();
-        if(mesReservations.length > 0 && !mesReservations[0].equals("Pas de réservations")){
-            for(String res : mesReservations){
+        if (mesReservations.length > 0 && !mesReservations[0].equals("Pas de réservations")) {
+            for (String res : mesReservations) {
                 String modeleVelo = res.split(",")[0];
                 String serialVelo = res.split(",")[1];
                 String dateDebut = res.split(",")[2];
                 String dateFin = res.split(",")[3];
                 String idVeloString = res.split(",")[4];
                 String choixAbo = res.split(",")[5];
-                Label labModeleVelo = new Label("Modèle: "+modeleVelo);
-                Label labSerialVelo = new Label("Numéro de série: "+serialVelo);
-                Label labChoixAbo = new Label("Abonnement: "+choixAbo);
-                Label labDateDebut = new Label("Date début: "+dateDebut);
-                Label labDateFin = new Label("Date fin: "+dateFin);
+                Label labModeleVelo = new Label("Modèle: " + modeleVelo);
+                Label labSerialVelo = new Label("Numéro de série: " + serialVelo);
+                Label labChoixAbo = new Label("Abonnement: " + choixAbo);
+                Label labDateDebut = new Label("Date début: " + dateDebut);
+                Label labDateFin = new Label("Date fin: " + dateFin);
                 Button reprendre = new Button("Prendre le vélo");
                 Button annuler = new Button("Annuler la réservation");
-                if(LocalDate.now().isEqual(LocalDate.parse(dateDebut)) || LocalDate.now().isBefore(LocalDate.parse(dateDebut))){
+                if (LocalDate.now().isEqual(LocalDate.parse(dateDebut))
+                        || LocalDate.now().isBefore(LocalDate.parse(dateDebut))) {
+                    reprendre.setDisable(false);
+                } else {
                     reprendre.setDisable(false);
                 }
-                else{
-                    reprendre.setDisable(false);
-                }
-                Supplier<String[]> repriseVeloReservationSupplier = () -> new String[] {idVeloString, dateDebut, dateFin, choixAbo};
-                reprendre.setOnAction(control.generateEventHandlerAction("choix-accessoires-reservation", repriseVeloReservationSupplier));
+                Supplier<String[]> repriseVeloReservationSupplier = () -> new String[] { idVeloString, dateDebut,
+                        dateFin, choixAbo };
+                reprendre.setOnAction(control.generateEventHandlerAction("choix-accessoires-reservation",
+                        repriseVeloReservationSupplier));
 
-                Supplier<String[]> AnnulerReservationSupplier = () -> new String[] {res.split(",")[6]};
-                annuler.setOnAction(control.generateEventHandlerAction("annuler-reservation", AnnulerReservationSupplier));
+                Supplier<String[]> AnnulerReservationSupplier = () -> new String[] { res.split(",")[6] };
+                annuler.setOnAction(
+                        control.generateEventHandlerAction("annuler-reservation", AnnulerReservationSupplier));
 
-                vboxListeReservations.getChildren().addAll(labModeleVelo, labSerialVelo, labChoixAbo, labDateDebut, labDateFin, reprendre, annuler);
+                vboxListeReservations.getChildren().addAll(labModeleVelo, labSerialVelo, labChoixAbo, labDateDebut,
+                        labDateFin, reprendre, annuler);
             }
-        }
-        else{
+        } else {
             Label pasDeRes = new Label(mesReservations[0]);
             vboxListeReservations.getChildren().add(pasDeRes);
         }
 
-        //bottom
-
-
+        // bottom
         hboxTitre.getChildren().addAll(titre);
         hboxTitreRetour.getChildren().addAll(but, hboxTitre);
-
 
         bp.setTop(hboxTitreRetour);
         bp.setCenter(vboxListeReservations);
@@ -1643,10 +1607,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-
-    public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo, LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires){
+    public void showRecapView(Velo v, double prixAbo, double prixAcc, double prixTotal, String nomAbo,
+            LocalDate dateDebut, LocalDate dateFin, ArrayList<String> listeAccessoires) {
         DecimalFormat df = new DecimalFormat("0.00");
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1655,7 +1619,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER);
 
@@ -1668,7 +1632,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Récapitulatif");
         titre.setStyle("-fx-font-size: 50;");
 
-        //Center
+        // Center
         VBox vboxRecapContenu = new VBox();
         HBox hboxImgVelo = new HBox();
 
@@ -1678,10 +1642,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         imgview.setPreserveRatio(true);
 
         VBox vboxInfoVelo = new VBox();
-        Label labMarque = new Label("Modèle: "+v.getModele());
-        Label labType = new Label("Type: "+v.getType());
-        Label labCouleur = new Label("Couleur: "+v.getCouleur());
-        Label labTaille = new Label("Taille: "+Integer.toString(v.getTaille())+"cm");
+        Label labMarque = new Label("Modèle: " + v.getModele());
+        Label labType = new Label("Type: " + v.getType());
+        Label labCouleur = new Label("Couleur: " + v.getCouleur());
+        Label labTaille = new Label("Taille: " + Integer.toString(v.getTaille()) + "cm");
         hboxImgVelo.setAlignment(Pos.CENTER);
 
         VBox vboxAboInfo = new VBox();
@@ -1696,7 +1660,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label labPrixTotal = new Label("Prix total: " + df.format(prixTotal) + "€");
         vboxPrix.setAlignment(Pos.CENTER);
 
-        //Bottom
+        // Bottom
         HBox hboxBottomButs = new HBox(20);
         hboxBottomButs.setAlignment(Pos.CENTER);
         HBox.setMargin(hboxBottomButs, new Insets(20, 0, 0, 0));
@@ -1705,8 +1669,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Button recommencerBut = new Button("Recommencer");
         setButtonStyle(recommencerBut, "rond");
 
-        validerBut.setOnAction(event -> {this.control.createAboAndLocation(v, prixAbo, prixTotal, nomAbo, dateDebut, dateFin, listeAccessoires);});
-        Supplier<String[]> recommencerSupplier = () -> new String[] {""};
+        validerBut.setOnAction(event -> {
+            this.control.createAboAndLocation(v, prixAbo, prixTotal, nomAbo, dateDebut, dateFin, listeAccessoires);
+        });
+        Supplier<String[]> recommencerSupplier = () -> new String[] { "" };
         recommencerBut.setOnAction(control.generateEventHandlerAction("retour-main-page", recommencerSupplier));
 
         BorderPane.setMargin(hboxBottomButs, new Insets(20, 0, 0, 0));
@@ -1727,8 +1693,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.centerOnScreen();
     }
 
-    public void showRecapReservation(ArrayList<String> listeInformations){
-
+    public void showRecapReservation(ArrayList<String> listeInformations) {
         String listeNomsAccessoires = listeInformations.get(0);
         String listeInfoEtDates = listeInformations.get(1);
         String listePrix = listeInformations.get(2);
@@ -1738,7 +1703,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         String[] arrayListePrix = listePrix.split(",");
         String[] arrayListeInfoVelo = listeInfoVelo.split(",");
 
-        //parent
+        // parent
         actualParent = new VBox();
         actualParent.setStyle("-fx-background-color: #ffffff");
 
@@ -1747,7 +1712,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         gp.setAlignment(Pos.CENTER);
         bp.setCenter(gp);
 
-        //top
+        // top
         HBox hboxTitreRetour = new HBox();
         hboxTitreRetour.setAlignment(Pos.CENTER);
 
@@ -1760,7 +1725,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label titre = new Label("Récapitulatif");
         titre.setStyle("-fx-font-size: 50;");
 
-        //Center
+        // Center
         VBox vboxRecapContenu = new VBox();
         HBox hboxImgVelo = new HBox();
 
@@ -1772,9 +1737,9 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         VBox vboxInfoVelo = new VBox();
         Label labMarque = new Label(arrayListeInfoVelo[2]);
         Label labType = new Label(arrayListeInfoVelo[3]);
-        Label labCouleur = new Label("Couleur: "+arrayListeInfoVelo[4]);
-        Label labTaille = new Label("Taille: "+arrayListeInfoVelo[5]+"cm");
-        Label labAccessoires = new Label("Accessoires: "+listeNomsAccessoires);
+        Label labCouleur = new Label("Couleur: " + arrayListeInfoVelo[4]);
+        Label labTaille = new Label("Taille: " + arrayListeInfoVelo[5] + "cm");
+        Label labAccessoires = new Label("Accessoires: " + listeNomsAccessoires);
         hboxImgVelo.setAlignment(Pos.CENTER);
 
         VBox vboxAboInfo = new VBox();
@@ -1789,7 +1754,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         Label labPrixTotal = new Label("Prix total: " + arrayListePrix[2] + "€");
         vboxPrix.setAlignment(Pos.CENTER);
 
-        //Bottom
+        // Bottom
         HBox hboxBottomButs = new HBox(20);
         hboxBottomButs.setAlignment(Pos.CENTER);
         Button validerBut = new Button("Valider");
@@ -1798,9 +1763,10 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         setButtonStyle(recommencerBut, "rond");
         BorderPane.setAlignment(hboxBottomButs, Pos.CENTER);
 
-        Supplier<String[]> validerSupplier = () -> new String[] {listeNomsAccessoires, listeInfoEtDates, listePrix, listeInfoVelo};
+        Supplier<String[]> validerSupplier = () -> new String[] { listeNomsAccessoires, listeInfoEtDates, listePrix,
+                listeInfoVelo };
         validerBut.setOnAction(control.generateEventHandlerAction("creation-location", validerSupplier));
-        Supplier<String[]> recommencerSupplier = () -> new String[] {""};
+        Supplier<String[]> recommencerSupplier = () -> new String[] { "" };
         recommencerBut.setOnAction(control.generateEventHandlerAction("retour-main-page", recommencerSupplier));
 
         BorderPane.setMargin(hboxBottomButs, new Insets(20, 0, 0, 0));
@@ -1820,7 +1786,6 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         stage.setScene(scene);
         stage.centerOnScreen();
     }
-
 
     public void setButtonStyle(Button nomBouton, String type){
         switch(type){
@@ -1866,8 +1831,7 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         }
     }
 
-
-    public void showAlert(AlertType alertType, String title, String context){
+    public void showAlert(AlertType alertType, String title, String context) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(context);
@@ -1876,27 +1840,22 @@ public class PrimaryView extends Application implements IView, PropertyChangeLis
         alert.showAndWait();
     }
 
-
-    public void setLabelStyle(Label l){
+    public void setLabelStyle(Label l) {
         l.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; ");
     }
 
-
-    public String setDispoText(Boolean bool){
-        if(bool){
+    public String setDispoText(Boolean bool) {
+        if (bool) {
             return "Disponible";
-        }
-        else{
+        } else {
             return "Indisponible";
         }
     }
 
-    
-    public void setLabelColor(Label l){
-        if(l.getText().equals("Disponible")){
+    public void setLabelColor(Label l) {
+        if (l.getText().equals("Disponible")) {
             l.setStyle("-fx-text-fill: green");
-        }
-        else{
+        } else {
             l.setStyle("-fx-text-fill: red");
         }
     }

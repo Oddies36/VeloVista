@@ -6,9 +6,14 @@ import be.velovista.Model.BL.Abonnement;
 
 public interface IAbonnementDAO {
   public void createAbonnementTable();
-  public ArrayList<String> getAbonnements();
+
   public ArrayList<Abonnement> getListeAbonnements();
+  
   public int getAbonnementId(String nomAbo);
+  
   public int checkDonneesExiste();
+  
   public void insertDonneesAbonnement();
+  
+  // public ArrayList<String> getAbonnements();
 }

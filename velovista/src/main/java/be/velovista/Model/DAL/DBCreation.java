@@ -10,7 +10,7 @@ public class DBCreation {
     private static DBProperties dbprop;
     public static Connection conn;
 
-    public static void initializeDatabase(){
+    public static void initializeDatabase() {
         String sqlString = "CREATE DATABASE VeloVista";
 
         dbprop = new DBProperties();
@@ -18,18 +18,15 @@ public class DBCreation {
         String username = dbprop.getUsername();
         String password = dbprop.getPassword();
 
-        try(Connection conn = DriverManager.getConnection(defaultUrl, username, password)){
-            try(Statement stat = conn.createStatement()){
+        try (Connection conn = DriverManager.getConnection(defaultUrl, username, password)) {
+            try (Statement stat = conn.createStatement()) {
                 stat.executeUpdate(sqlString);
                 System.out.println("Création DB ok");
-            }
-            catch(SQLException e){
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 }
-

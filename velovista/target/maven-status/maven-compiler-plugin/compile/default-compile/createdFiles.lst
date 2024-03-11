@@ -21,7 +21,6 @@ be\velovista\Model\DAL\DAO\User\IUserDAO.class
 be\velovista\Model\DAL\DAO\Location\LocationDAO.class
 be\velovista\Model\BL\Abonnement.class
 be\velovista\Model\IModel.class
-be\velovista\Model\BL\ClasseConteneur.class
 be\velovista\Model\DAL\DAO\Merites\MeritesDAO.class
 be\velovista\Model\DAL\DAO\Merite_utilisateur\Merite_utilisateurDAO.class
 be\velovista\Model\DAL\DAO\Merites\IMeritesDAO.class

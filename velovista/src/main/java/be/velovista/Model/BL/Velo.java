@@ -1,7 +1,7 @@
 package be.velovista.Model.BL;
 
 public abstract class Velo {
-    
+
     private int idVelo;
     private String numeroSerie;
     private String marque;
@@ -16,32 +16,39 @@ public abstract class Velo {
     public int getIdVelo() {
         return idVelo;
     }
+
     public void setIdVelo(int idVelo) {
         this.idVelo = idVelo;
     }
-    public String getNumeroSerie(){
+
+    public String getNumeroSerie() {
         return numeroSerie;
     }
-    public void setNumeroSerie(String numeroSerie){
+
+    public void setNumeroSerie(String numeroSerie) {
         this.numeroSerie = numeroSerie;
     }
+
     public String getModele() {
         return marque;
     }
+
     public void setModele(String modele) {
         this.marque = modele;
     }
 
-    public String getType(){
+    public String getType() {
         return type;
     }
-    public void getType(String type){
+
+    public void getType(String type) {
         this.type = type;
     }
 
     public boolean isDisponible() {
         return disponible;
     }
+
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
@@ -49,6 +56,7 @@ public abstract class Velo {
     public String getCouleur() {
         return couleur;
     }
+
     public void setCouleur(String couleur) {
         this.couleur = couleur;
     }
@@ -56,6 +64,7 @@ public abstract class Velo {
     public int getTaille() {
         return taille;
     }
+
     public void setTaille(int taille) {
         this.taille = taille;
     }
@@ -63,25 +72,29 @@ public abstract class Velo {
     public int getAge() {
         return age;
     }
+
     public void setAge(int age) {
         this.age = age;
     }
 
-    public double getPrix(){
+    public double getPrix() {
         return prix;
     }
-    public void setPrix(Double prix){
+
+    public void setPrix(Double prix) {
         this.prix = prix;
     }
 
-    public String getPhoto(){
+    public String getPhoto() {
         return photo;
     }
-    public void setPhoto(String photo){
+
+    public void setPhoto(String photo) {
         this.photo = photo;
     }
 
-    public Velo(int idVelo, String numeroSerie, String marque, String type, boolean disponible, String couleur, int taille, int age, double prix, String photo){
+    public Velo(int idVelo, String numeroSerie, String marque, String type, boolean disponible, String couleur,
+            int taille, int age, double prix, String photo) {
         this.idVelo = idVelo;
         this.numeroSerie = numeroSerie;
         this.marque = marque;
@@ -94,12 +107,12 @@ public abstract class Velo {
         this.photo = photo;
     }
 
+    public int getVitessesFromVelo() {
+        return -1;
+    }
 
-    public int getVitessesFromVelo(){
+    public int getAutonomieFromVelo() {
         return -1;
     }
-    public int getAutonomieFromVelo(){
-        return -1;
-    }
-    
+
 }

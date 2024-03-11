@@ -34,9 +34,7 @@ public class DBTableInitializer {
     static IUserDAO iuserdao = new UserDAO();
     static IVeloDAO ivelodao = new VeloDAO();
 
-    public static void createAllTables(){
-        //DBConnection.getConnection();
-
+    public static void createAllTables() {
         iuserdao.createUserTable();
         ivelodao.createVeloTable();
         imeritesdao.createMeritesTable();
